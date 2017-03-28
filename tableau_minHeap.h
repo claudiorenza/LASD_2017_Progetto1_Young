@@ -4,17 +4,17 @@
 typedef int ** TABLEAU;
 typedef int * TABLEAUel;
 
-void talbeau_minHeap_heapify(TABLEAU T_young, int idx);
+void tableau_minHeap_heapify(TABLEAU T_young, int idx);
 
-int talbeau_minHeap_sinistro(int idx);
+int tableau_minHeap_sinistro(int idx);
 
-int talbeau_minHeap_destro(int idx);
+int tableau_minHeap_destro(int idx);
 
-int talbeau_minHeap_padre(int idx);
+int tableau_minHeap_padre(int idx);
 
-void talbeau_minHeap_buildHeap(TABLEAU T_young);
+void tableau_minHeap_buildHeap(TABLEAU T_young);
 
-void talbeau_minHeap_swap(TABLEAU T_young, int idx_1, int idx_2);
+void tableau_minHeap_swap(TABLEAU T_young, int idx_1, int idx_2);
 
 
 #endif

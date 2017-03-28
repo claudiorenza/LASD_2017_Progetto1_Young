@@ -54,7 +54,7 @@ void tableau_generate(TABLEAU T_young)   {
 		} else			
 			printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUel - tableau_generate\n");
     }   
-    talbeau_minHeap_buildHeap(T_young);  //costruisco l'heap da array dato
+    tableau_minHeap_buildHeap(T_young);  //costruisco l'heap da array dato
     //N.B.: in questo caso, usufruiamo dell'algoritmo buildHeap;
     //in alternativa è possibile aggiungere ogni chiave, mettendolo subito in ordine al momento dell'inserimento (come in 'tableau_insertKey')
     tableau_print(T_young);    //stampa della Tableau generata
@@ -68,9 +68,9 @@ void tableau_insertKey(TABLEAU T_young)  {
     
     printf("Quale valore vuoi inserire nella Tableau? ");
     *(T_young[idx]) = io_getInteger();   //posiziono la chiave nell'ultima posizione
-    while(idx > 1 && *(T_young[talbeau_minHeap_padre(idx)]) > *(T_young[idx]))  {    //risalgo il sottoalbero per posizionare il valore nel posto giusto
-        talbeau_minHeap_swap(T_young, idx, talbeau_minHeap_padre(idx));
-        idx = talbeau_minHeap_padre(idx);
+    while(idx > 1 && *(T_young[tableau_minHeap_padre(idx)]) > *(T_young[idx]))  {    //risalgo il sottoalbero per posizionare il valore nel posto giusto
+        tableau_minHeap_swap(T_young, idx, tableau_minHeap_padre(idx));
+        idx = tableau_minHeap_padre(idx);
     }
     tableau_print(T_young);    //stampa della Tableau aggiornata
 }
@@ -79,12 +79,12 @@ void tableau_insertKey(TABLEAU T_young)  {
 int tableau_searchKey(TABLEAU T_young, int idx, int key)    {
     if(T_young[idx])   {   //se != NULL
         if(key >= *(T_young[idx]))  {   //controllo se la chiave è più grande del valore visitato nella Tableau
-            int idx_ret = tableau_searchKey(T_young, talbeau_minHeap_sinistro(idx), key); //ricorsivamente scendo a sinistra
+            int idx_ret = tableau_searchKey(T_young, tableau_minHeap_sinistro(idx), key); //ricorsivamente scendo a sinistra
             if(idx_ret != 0)    //se l'ho già trovato
                 return idx_ret;   //ritorno già l'indice ai R.A. precedenti;
             if(key == *(T_young[idx]))     //se ho trovato effettivamente il valore
                 return idx;     //ritorno già il suo indice
-            return tableau_searchKey(T_young, talbeau_minHeap_destro(idx), key);  //ricorsivamente scendo a destra
+            return tableau_searchKey(T_young, tableau_minHeap_destro(idx), key);  //ricorsivamente scendo a destra
         }
     }
     return 0;   //o non trovo il valore, o eccede key, oppure trovo una foglia NULL
@@ -106,12 +106,12 @@ void tableau_deleteKey(TABLEAU T_young) {
         int val_del = *(T_young[idx]);     //salvo il valore cercato
         tableau_overwrite(T_young, idx);   //sovrascrivo il valore in posizione Tableau[idx] con l'ultimo elemento dello Heap
         if(*(T_young[*(T_young[0])]) < val_del)   {  //confronto il valore eliminato con il sostituito, utile al riordino in Heap
-            while(idx > 1 && *(T_young[talbeau_minHeap_padre(idx)]) > *(T_young[idx]))  {    //riordino a salire dalla posizione attuale
-                talbeau_minHeap_swap(T_young, idx, talbeau_minHeap_padre(idx));
-                idx = talbeau_minHeap_padre(idx);
+            while(idx > 1 && *(T_young[tableau_minHeap_padre(idx)]) > *(T_young[idx]))  {    //riordino a salire dalla posizione attuale
+                tableau_minHeap_swap(T_young, idx, tableau_minHeap_padre(idx));
+                idx = tableau_minHeap_padre(idx);
             }
         } else    {
-            talbeau_minHeap_heapify(T_young, idx); //riordino a scendere dalla posizione attuale
+            tableau_minHeap_heapify(T_young, idx); //riordino a scendere dalla posizione attuale
         }
         tableau_print(T_young);    //stampa della Tableau aggiornata
         printf("Valore eliminato in Tableau[%d] = %d\n", idx_p, val_del);  //stampa dell'indice e del valore eliminato
@@ -179,7 +179,7 @@ void tableau_min(TABLEAU T_young)  {
 int tableau_extractMin(TABLEAU T_young) {
     int min = *(T_young[1]);
     tableau_overwrite(T_young, 1); //scambio con l'ultimo elemento dell'Heap
-    talbeau_minHeap_heapify(T_young, 1);   //riordino in Heap dalla radice
+    tableau_minHeap_heapify(T_young, 1);   //riordino in Heap dalla radice
 
     return min;
 }
