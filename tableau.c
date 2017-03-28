@@ -52,9 +52,9 @@ TABLEAU tableau_init()  {
     return newTableau;
 }
 
-//Riempimento matrice e creazione dell'heap
+//Riempimento matrice e creazione dell'Heap
 void tableau_generate(TABLEAU T_young)   {
-    int idx_1, idx_2, n_elem, idx_n = 0;
+    int idx_1, idx_2, n_elem, idx_n = 0, idx_i, idx_j;
     do  {
         printf("Quante righe vuoi nella Tableau? (1-%d): ", MAX_matrix);
         if((idx_1 = io_getInteger()) < 1 || idx_1 > MAX_matrix)
@@ -78,18 +78,23 @@ void tableau_generate(TABLEAU T_young)   {
 
     do  {
         printf("Quanti elementi vuoi inserire nella Tableau? (1-%d): ", idx_1*idx_2);
-        if((n_elem = io_getInteger()) < 1 || n_elem > idx_1*idx_2)
+        if((n_elem = io_getInteger()) < 1 || n_elem > idx_1*idx_2)  //si possono inserire in input idx_1*idx_2 elementi
 			printf("ATTENZIONE: Valore non valido\n\n");
 	}while(n_elem < 1 || n_elem > idx_1*idx_2);
 
-    while(idx_n != n_elem)   {
-
-        if((T_young[idx_1][idx_2] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
-			*(T_young[idx_1][]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
-            *(T_young[0][0]) += 1;   //incremento l'heapSize
-		} else			
-			printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUel - tableau_generate\n");
-    }   
+    for(idx_1=1;idx_1<=*(T_young[1][0]) && *(T_young[0][0]) != n_elem;idx_1++)    { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo esterno
+        idx_i = idx_1;  //mi copio l'indice di riga
+        for(idx_j=1;idx_j<=idx_1 && idx_j<=*(T_young[0][1]) && *(T_young[0][0])!=n_elem;idx_j++)   { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo interno
+            if((T_young[idx_i][idx_j] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+                *(T_young[idx_i][idx_j]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+                *(T_young[0][0]) += 1;   //incremento l'heapSize
+            } else  {
+                printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUel - tableau_generate\n");
+                return;
+            }
+            idx_i--;    //l'indice di riga diminuisce mentre l'indice di colonna aumenta
+        }
+    }
     tableau_minHeap_buildHeap(T_young);  //costruisco l'heap da matrice data
     //N.B.: in questo caso, usufruiamo dell'algoritmo buildHeap;
     //in alternativa è possibile aggiungere ogni chiave, mettendolo subito in ordine al momento dell'inserimento (come in 'tableau_insertKey')
