@@ -1,0 +1,5 @@
+{
+    "key": "cmd + alt + shift + b",
+    "command": "workbench.action.tasks.clean",
+    "args": "clean"
+}
