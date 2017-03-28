@@ -27,34 +27,70 @@ int tableau_menu(int isEmpty)	{
 //Creo la struttura come Tableau
 TABLEAU tableau_init()  {
     TABLEAU newTableau = NULL;
-    if((newTableau = (int **)calloc(MAX_queue+1, sizeof(int *))))  {   //controllo di corretta allocazione dinamica di memoria
-        if((newTableau[0] = (int *)malloc(sizeof(int))))   {   //alloco nell'indice 0...
-            *(newTableau[0]) = 0;                              //il valore dell'heapSize
-            for(int idx=1;idx<MAX_queue+1;idx++)    //pongo i restanti puntatori a NULL, che verranno poi allocati una volta inseriti nuovi elementi
-                newTableau[idx] = NULL;
-        } else
-            printf("[MEM] ATTENZIONE: Problema di allocazione newTableau[0] heapSize - tableau_init\n");
-    } else  //in caso di errori nell'allocazione
-        printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU - tableau_init\n");
+    if((newTableau = (int ***)calloc(MAX_matrix+1, sizeof(int **))))  {   //controllo di corretta allocazione dinamica di memoria
+        for(int idx_1=0;idx_1<MAX_matrix+1;idx_1++)   {
+            if((newTableau[idx_1] = (int **)calloc(MAX_matrix+1, sizeof(int *)))) { //allocazione delle colonne per la riga attuale
+                for(int idx_2=0;idx_2<MAX_matrix+1;idx_2++)    //pongo i puntatori a NULL, che verranno poi allocati una volta inseriti nuovi elementi
+                        newTableau[idx_1][idx_2] = NULL;
+            } else  {
+                printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU colonne - tableau_init\n");
+                free(newTableau);   //pulisco la memoria appena allocata
+                return NULL;
+            }
+        }
+        if((newTableau[0][0] = (int *)malloc(sizeof(int))))      //alloco negli indici...
+            *(newTableau[0][0]) = 0;            //il valore dell'heapSize/numero degli elementi
+        else  {
+            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU elements - tableau_init\n");
+            //[IMPL] funzione di deallocazione completa della matrice
+            return NULL;
+        }
+    } else {//in caso di errori nell'allocazione
+        printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU righe - tableau_init\n");
+        return NULL;
+    }
     return newTableau;
 }
 
-//Riempimento array e creazione dell'heap
+//Riempimento matrice e creazione dell'heap
 void tableau_generate(TABLEAU T_young)   {
-    int idx, n_elem;
+    int idx_1, idx_2, n_elem, idx_n = 0;
     do  {
-        printf("Quanti elementi vuoi inserire nell'array'? (1-%d): ", MAX_queue);
-        if((n_elem = io_getInteger()) < 1 || n_elem > MAX_queue)
+        printf("Quante righe vuoi nella Tableau? (1-%d): ", MAX_matrix);
+        if((idx_1 = io_getInteger()) < 1 || idx_1 > MAX_matrix)
 			printf("ATTENZIONE: Valore non valido\n\n");
-	}while(n_elem < 1 || n_elem > MAX_queue);
-    for(idx=1;idx<=n_elem;idx++)   {
-        if((T_young[idx] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
-			*(T_young[idx]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
-            *(T_young[0]) += 1;   //incremento l'heapSize
+	}while(idx_1 < 1 || idx_1 > MAX_matrix);
+    
+    do  {
+        printf("Quante colonne vuoi nella Tableau? (1-%d): ", MAX_matrix);
+        if((idx_2 = io_getInteger()) < 1 || idx_2 > MAX_matrix)
+			printf("ATTENZIONE: Valore non valido\n\n");
+	}while(idx_2 < 1 || idx_2 > MAX_matrix);
+    
+    if((newTableau[1][0] = (int *)malloc(sizeof(int))) && (newTableau[0][1] = (int *)malloc(sizeof(int))))  {
+        *(newTableau[1][0]) = idx_1;    //Pongo l'indice massimo di riga
+        *(newTableau[0][1]) = idx_2;    //e l'indice massimo di colonna
+    } else  {
+            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU elements - tableau_init\n");
+            //[IMPL] funzione di deallocazione completa della matrice
+            return NULL;
+    }
+
+    do  {
+        printf("Quanti elementi vuoi inserire nella Tableau? (1-%d): ", idx_1*idx_2);
+        if((n_elem = io_getInteger()) < 1 || n_elem > idx_1*idx_2)
+			printf("ATTENZIONE: Valore non valido\n\n");
+	}while(n_elem < 1 || n_elem > idx_1*idx_2);
+
+    while(idx_n != n_elem)   {
+
+        if((T_young[idx_1][idx_2] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+			*(T_young[idx_1][]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+            *(T_young[0][0]) += 1;   //incremento l'heapSize
 		} else			
 			printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUel - tableau_generate\n");
     }   
-    tableau_minHeap_buildHeap(T_young);  //costruisco l'heap da array dato
+    tableau_minHeap_buildHeap(T_young);  //costruisco l'heap da matrice data
     //N.B.: in questo caso, usufruiamo dell'algoritmo buildHeap;
     //in alternativa è possibile aggiungere ogni chiave, mettendolo subito in ordine al momento dell'inserimento (come in 'tableau_insertKey')
     tableau_print(T_young);    //stampa della Tableau generata
@@ -130,7 +166,7 @@ void tableau_delete(TABLEAU T_young) {
     }while(choice != 'S' && choice != 'N');
 
     if(choice == 'S')
-        T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'array ma solo tutti i puntatori al suo interno
+        T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
     printf("Tableau eliminata\n");
 }
 
@@ -139,7 +175,7 @@ void tableau_delete(TABLEAU T_young) {
 TABLEAU tableau_free(TABLEAU T_young, int del_complete)	{   //il parametro 'del_complete' == 1 libera memoria in fase di chiusura dell'applicazione
 	for(int idx=1;idx<=*(T_young[0]);idx++) {      //ciclo solo fino a heapSize
         if(T_young[idx])       //controllo se effettivamente esiste un valore in 'idx'
-            T_young[idx] = tableau_free_node(T_young[idx]);   //libero il vertice dall'array
+            T_young[idx] = tableau_free_node(T_young[idx]);   //libero il vertice dall'matrice
     }
     if(del_complete) {  //se sto chiudendo l'applicazione
         free(T_young[0]);  //dealloco l'heapSize

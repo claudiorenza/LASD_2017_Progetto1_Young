@@ -7,9 +7,9 @@
 #include "num.h"
 #include "tableau_minHeap.h"
 
-#define MAX_queue 256
+#define MAX_matrix 256
 
-typedef int ** TABLEAU;
+typedef int *** TABLEAU;
 typedef int * TABLEAUel;
 
 int tableau_menu();

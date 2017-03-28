@@ -18,9 +18,9 @@ OBJ = $(SRC:.c=.o)
 default: all
 
 all: $(OBJ)
-	$(CC) $(CCFLAGS) $(SRC) -o matrixHeap main.c
+	$(CC) $(CCFLAGS) $(SRC) -o tableauHeap main.c
 	@echo "Build complete"
 	
 clean:
-	$(RM) *.dSYM *.o matrixHeap
+	$(RM) *.dSYM *.o tableauHeap
 	@echo "Clean complete"
