@@ -16,29 +16,29 @@ int tableau_menu();
 
 TABLEAU tableau_init();
 
-void tableau_generate(TABLEAU coda);
+void tableau_generate(TABLEAU T_young);
 
-void tableau_insertKey(TABLEAU coda);
+void tableau_insertKey(TABLEAU T_young);
 
-int tableau_searchKey(TABLEAU coda, int idx, int key);
+int tableau_searchKey(TABLEAU T_young, int idx, int key);
 
-void tableau_overwrite(TABLEAU coda, int idx);
+void tableau_overwrite(TABLEAU T_young, int idx);
 
-void tableau_deleteKey(TABLEAU coda);
+void tableau_deleteKey(TABLEAU T_young);
 
-void tableau_delete(TABLEAU coda);
+void tableau_delete(TABLEAU T_young);
 
-TABLEAU tableau_free(TABLEAU coda, int del_complete);
+TABLEAU tableau_free(TABLEAU T_young, int del_complete);
 
-TABLEAUel tableau_free_node(TABLEAUel coda_el);
+TABLEAUel tableau_free_node(TABLEAUel T_young_el);
 
-void tableau_min(TABLEAU coda);
+void tableau_min(TABLEAU T_young);
 
-int tableau_extractMin(TABLEAU coda);
+int tableau_extractMin(TABLEAU T_young);
 
-void tableau_print(TABLEAU coda);
+void tableau_print(TABLEAU T_young);
 
-int tableau_isEmpty(TABLEAU coda);
+int tableau_isEmpty(TABLEAU T_young);
 
 
 #endif
