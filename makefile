@@ -10,7 +10,7 @@ RM      = rm -rf
 SRC = num.c \
 	random.c \
 	io.c \
-	talbleau_minHeap.c \
+	talbeau_minHeap.c \
 	tableau.c
 
 OBJ = $(SRC:.c=.o)

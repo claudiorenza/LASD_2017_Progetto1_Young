@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include "io.h"
 #include "num.h"
-#include "talbleau_minHeap.h"
+#include "tableau_minHeap.h"
 
 #define MAX_queue 256
 
