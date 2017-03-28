@@ -10,8 +10,8 @@ RM      = rm -rf
 SRC = num.c \
 	random.c \
 	io.c \
-	matrix_minHeap.c \
-	prQueue.c
+	talbleau_minHeap.c \
+	tableau.c
 
 OBJ = $(SRC:.c=.o)
 
