@@ -1,20 +1,21 @@
 #ifndef HEAP_H_INCLUDED
 #define HEAP_H_INCLUDED
 
-typedef int ** TABLEAU;
-typedef int * TABLEAUel;
+typedef int *** TABLEAU;
+typedef int ** TABLEAUptr;
+typedef int * TABLEAUval;
 
-void tableau_minHeap_heapify(TABLEAU T_young, int idx);
+void tableau_minHeap_heapify(TABLEAU T_young, int idx_row, int idx_col);
 
-int tableau_minHeap_sinistro(int idx);
+TABLEAUptr tableau_minHeap_sinistro(TABLEAU T_young, int idx_row, int idx_col);
 
-int tableau_minHeap_destro(int idx);
+TABLEAUptr tableau_minHeap_destro(TABLEAU T_young, int idx_row, int idx_col);
 
-int tableau_minHeap_padre(int idx);
+TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col);
 
 void tableau_minHeap_buildHeap(TABLEAU T_young);
 
-void tableau_minHeap_swap(TABLEAU T_young, int idx_1, int idx_2);
+void tableau_minHeap_swap(TABLEAUptr T_ptr_el, TABLEAUptr T_ptr_min);
 
 
 #endif

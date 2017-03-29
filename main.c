@@ -13,15 +13,15 @@ int main()  {
 		io_clearScreen();
 		switch(choiceMenu = tableau_menu(tableau_isEmpty(T_young)))	{	//chiamata del menu principale con scelta dell'albero con controllo di esistenza della Tableau
 			case 1:
-				printf("GENERAZIONE CODA DI PRIORITA' IN HEAP BINARIO\n\n");
+				printf("GENERAZIONE TABLEAU DI YOUNG IN HEAP\n\n");
 				tableau_generate(T_young);
 				break;
 			case 2:
-				printf("INSERIMENTO NUOVO ELEMENTO NELLA CODA\n\n");
+				printf("INSERIMENTO NUOVO ELEMENTO NELLA TABLEAU DI YOUNG\n\n");
                 tableau_insertKey(T_young);
 				break;
 			case 3:
-				printf("STAMPA CODA DI PRIORITA'\n\n");
+				printf("STAMPA TABLEAU DI YOUNG\n\n");
                 tableau_print(T_young);
 				break;
 			case 4:
@@ -29,11 +29,11 @@ int main()  {
 				tableau_min(T_young);
 				break;
             case 5:
-				printf("CANCELLAZIONE ELEMENTO DA HEAP\n\n");
+				printf("CANCELLAZIONE ELEMENTO DALLA TABLEAU DI YOUNG\n\n");
                 tableau_deleteKey(T_young);
 				break;
 			case 6:
-				printf("CANCELLAZIONE CODA DI PRIORITA'\n\n");
+				printf("CANCELLAZIONE TABLEAU DI YOUNG\n\n");
 				tableau_delete(T_young);
 				break;
             case 7:

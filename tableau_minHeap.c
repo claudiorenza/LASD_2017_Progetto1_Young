@@ -1,55 +1,68 @@
 #include "tableau_minHeap.h"
 
 //Heapify
-void tableau_minHeap_heapify(TABLEAU T_young, int idx)	{
-	int idx_l, idx_r, idx_min;
-	idx_l = tableau_minHeap_sinistro(idx);
-	idx_r = tableau_minHeap_destro(idx);
+void tableau_minHeap_heapify(TABLEAU T_young, int idx_row, int idx_col)	{
+	int idx_l, idx_r
+	TABLEAUptr T_ptr_min;	//riferimento al puntatore col valore più piccolo
+	TABLEAUptr T_ptr_left = tableau_minHeap_sinistro(T_young, idx_row, idx_col);	//indice di riga sul valore a sinistra
+	TABLEAUptr T_ptr_right = tableau_minHeap_destro(T_young, idx_row, idx_col);	//indice di colonna sul valore a destra
 
-	if (idx_l <= *(T_young[0]) && *(T_young[idx_l]) < *(T_young[idx]))
-		idx_min = idx_l;
+	//in base all'ordinamento Heap, determino quale valore ho bisogno di sostituire nei vertici figli
+	if (T_ptr_left && *T_ptr_left < *(T_young[idx_row][idx_col]))	//confronto dei valori fra posizione attuale e figlio sinistro
+		T_ptr_min = T_ptr_left;
 	else
-		idx_min = idx;
+		T_ptr_min = T_young[idx_row][idx_col];	//posizione attuale
 
-	if(idx_r <= *(T_young[0]) && *(T_young[idx_r]) < *(T_young[idx_min]))
-		idx_min = idx_r;
+	if(T_ptr_right && *(T_young[idx_row][idx_right]) < *(T_ptr_min))	//confronto dei valori fra posizione attuale e figlio destro
+		T_ptr_min = T_ptr_right;
 
-	if(idx_min != idx)	{
-		tableau_minHeap_swap(T_young, idx, idx_min);
-		tableau_minHeap_heapify(T_young, idx_min);
+	if(T_ptr_min != T_young[idx_row][idx_col])	{	//se effettivamente ho un valore da scambiare
+		int tmp = *T_young[idx_row][idx_col];	//mi conservo momentaneamente il valore nella posizione attuale
+		tableau_minHeap_swap(T_young[idx_row][idx_col], T_ptr_min);	//effetto lo scambio fra i valori
+		if(T_ptr_left && tmp == *T_ptr_left)	//se il valore conservato è stato posizionato a sinistra/riga successiva
+			tableau_minHeap_heapify(T_young, idx_row+1, idx_col);	//continuo heapify nella riga successiva
+		else if (T_ptr_right && tmp == *T_ptr_right)	//se il valore conservato è stato posizionato a destra/colonna successiva
+			tableau_minHeap_heapify(T_young, idx_row, idx_col+1);	//continuo heapify nella colonna successiva
 	}
 }
 
 
-//Ricavo l'indice del figlio sinistro
-int tableau_minHeap_sinistro(int idx)	{
-	return 2*idx;
+//Ricavo l'indice del figlio sinistro (riga successiva)
+TABLEAUptr tableau_minHeap_sinistro(TABLEAU T_young, int idx_row, int idx_col)	{
+	if(idx_row+1 <= *(T_young[1][0]))	//se non eccedo col numero di righe
+		return T_young[idx_row+1][idx_col];	//ritorno il puntatore al figlio sinistro
+	return NULL;	//altrimenti ritorno un puntatore vuoto
 }
 
 
-//Ricavo l'indice del il figlio destro
-int tableau_minHeap_destro(int idx)	{
-	return 2*idx+1;
+//Ricavo l'indice del il figlio destro (colonna successiva)
+TABLEAUptr tableau_minHeap_destro(TABLEAU T_young, int idx_row, int idx_col)	{
+	if(idx_col+1 <= *(T_young[0][1]))	//se non eccedo col numero di righe
+		return T_young[idx_row][idx_col+1];	//ritrono il puntatore al figlio destro
+	return NULL;	//altrimenti ritorno un puntatore vuoto
 }
 
 
-//Ricavo l'indice del padre
-int tableau_minHeap_padre(int idx)	{
-	return idx/2;
+//Indico fra i due padri chi ha il valore più grande (mi assicuro di mantenere una proprietà transitiva fra i valori da confrontare)
+TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
+	if(*(T_young[idx_row-1][idx_col]) > *(T_young[idx_row][idx_col-1]))
+		return T_young[idx_row-1][idx_col];
+	else
+		return T_young[idx_row][idx_col-1];
 }
 
 
 //Creazione dello Heap
 void tableau_minHeap_buildHeap(TABLEAU T_young)	{
 	int idx;
-	for(idx=*(T_young[0])/2; idx>0; idx--)
+	for(idx=*(T_young[0][0])/2; idx>0; idx--)
 		tableau_minHeap_heapify(T_young, idx);
 }
 
 
-//Swap dei riferimenti
-void tableau_minHeap_swap(TABLEAU T_young, int idx_1, int idx_2) {
-    int *tmp = T_young[idx_2];
-    T_young[idx_2] = T_young[idx_1];
-    T_young[idx_1] = tmp;
+//Swap dei valori nei riferimenti
+void tableau_minHeap_swap(TABLEAUptr T_ptr_el, TABLEAUptr T_ptr_min) {
+    int tmp = *T_ptr_el;
+    *T_ptr_el = *T_ptr_min;
+    *T_ptr_min = tmp;
 }

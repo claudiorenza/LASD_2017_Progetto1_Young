@@ -10,7 +10,8 @@
 #define MAX_matrix 256
 
 typedef int *** TABLEAU;
-typedef int * TABLEAUel;
+typedef int ** TABLEAUptr;
+typedef int * TABLEAUval;
 
 int tableau_menu();
 
@@ -30,7 +31,7 @@ void tableau_delete(TABLEAU T_young);
 
 TABLEAU tableau_free(TABLEAU T_young, int del_complete);
 
-TABLEAUel tableau_free_node(TABLEAUel T_young_el);
+TABLEAUval tableau_free_node(TABLEAUval T_young_el);
 
 void tableau_min(TABLEAU T_young);
 
