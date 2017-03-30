@@ -34,20 +34,18 @@ TABLEAU tableau_init()  {
                         newTableau[idx_row][idx_col] = NULL;
             } else  {
                 printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU colonne - tableau_init\n");
-                free(newTableau);   //pulisco la memoria appena allocata
-                return NULL;
+                exit(1);
             }
         }
         if((newTableau[0][0] = (int *)malloc(sizeof(int))))      //alloco negli indici...
             *(newTableau[0][0]) = 0;            //il valore dell'heapSize/numero degli elementi
         else  {
             printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU elements - tableau_init\n");
-            //[IMPL] funzione di deallocazione completa della matrice
-            return NULL;
+            exit(1);
         }
     } else {//in caso di errori nell'allocazione
         printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU righe - tableau_init\n");
-        return NULL;
+        exit(1);
     }
     return newTableau;
 }
@@ -55,7 +53,7 @@ TABLEAU tableau_init()  {
 //Riempimento matrice e creazione dell'Heap
 void tableau_generate(TABLEAU T_young)   {
     int idx_row, idx_col, n_elem, 
-    int idx_i, idx_j;   //indici di riga e colonna provvisori
+    int idx_i, idx_col;   //indici di riga e colonna provvisori
     do  {
         printf("Quante righe vuoi nella Tableau? (1-%d): ", MAX_matrix);
         if((idx_row = io_getInteger()) < 1 || idx_row > MAX_matrix)
@@ -72,9 +70,8 @@ void tableau_generate(TABLEAU T_young)   {
         *(newTableau[1][0]) = idx_row;    //Pongo l'indice massimo di riga
         *(newTableau[0][1]) = idx_col;    //e l'indice massimo di colonna
     } else  {
-            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU elements - tableau_init\n");
-            //[IMPL] funzione di deallocazione completa della matrice
-            return NULL;
+        printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU elements - tableau_init\n");
+        exit(1);
     }
 
     do  {
@@ -85,16 +82,15 @@ void tableau_generate(TABLEAU T_young)   {
 
     //Riempimento triangolare superiore
     for(idx_row=1;idx_row<=*(T_young[1][0]) && *(T_young[0][0]) <= n_elem;idx_row++)    { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo esterno
-        idx_i = idx_row;  //assegno all'indice di riga da decrementare il valore di quello fissato in questo ciclo
-        for(idx_j=1;idx_j<=idx_row && idx_j<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_j++)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
-            //N.B.: 'idx_j<=*(T_young[0][1])' è utile nel caso in cui il numero di righe 'idx_row' possono essere maggiori delle colonne
-            if((T_young[idx_i][idx_j] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
-                *(T_young[idx_i][idx_j]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+        for(idx_col=1;idx_col<=idx_row && idx_col<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_col++)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
+            //N.B.: 'idx_col<=*(T_young[0][1])' è utile nel caso in cui il numero di righe 'idx_row' possono essere maggiori delle colonne
+            if((T_young[idx_row-(idx_col-1)][idx_col] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+                *(T_young[idx_i][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
                 *(T_young[0][0]) += 1;   //incremento l'heapSize/numero di elementi
                 idx_i--;    //l'indice di riga provvisoria diminuisce mentre l'indice di colonna aumenta
             } else  {
                 printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
-                return;
+                exit(1);
             }
         }
     }
@@ -103,16 +99,16 @@ void tableau_generate(TABLEAU T_young)   {
     if(idx_row > *(T_young[1][0]) && *(T_young[0][0]) < n_elem) {    //nel caso debba inserire ancora altri elementi
         idx_row -= 1; //decremento per tornare al giusto indice di ultima riga [== *(T_young[1][0])]
         for(idx_col=2;idx_col<=*(T_young[0][1]) && *(T_young[0][0]) <= n_elem;idx_col++)    { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo esterno
-            idx_j = idx_col;  //assegno all'indice di colonna da incrementare il valore di quello fissato in questo ciclo
-            for(idx_i=*(T_young[1][0]);idx_i>=1 && idx_j<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_i--)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
+            idx_col = idx_col;  //assegno all'indice di colonna da incrementare il valore di quello fissato in questo ciclo
+            for(idx_i=*(T_young[1][0]);idx_i>=1 && idx_col<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_i--)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
                 //N.B.: 'idx_i<=*(T_young[1][0])' è utile nel caso in cui il numero di righe 'idx_row' possono essere maggiori delle colonne
-                if((T_young[idx_i][idx_j] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
-                    *(T_young[idx_i][idx_j]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+                if((T_young[idx_i][idx_col] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+                    *(T_young[idx_i][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
                     *(T_young[0][0]) += 1;   //incremento l'heapSize/numero di elementi
-                    idx_j++;    //l'indice di colonna provvisoria aumenta mentre l'indice di riga diminuisce
+                    idx_col++;    //l'indice di colonna provvisoria aumenta mentre l'indice di riga diminuisce
                 } else  {
                     printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
-                    return;
+                    exit(1);
                 }
             }
         }
