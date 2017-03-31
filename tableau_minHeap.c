@@ -52,13 +52,13 @@ TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
 }
 
 
-//Creazione dello Heap
+/*Creazione dello Heap
 void tableau_minHeap_buildHeap(TABLEAU T_young)	{
 	int idx;
 	for(idx=*(T_young[0][0])/2; idx>0; idx--)
 		tableau_minHeap_heapify(T_young, idx);
 }
-
+*/
 
 //Swap dei valori nei riferimenti
 void tableau_minHeap_swap(TABLEAUptr T_ptr_el, TABLEAUptr T_ptr_min) {

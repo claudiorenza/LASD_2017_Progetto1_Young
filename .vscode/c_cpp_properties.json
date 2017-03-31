@@ -26,7 +26,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\Users\\kloud\\OneDrive\\Software\\CodeBlocks 16\\MinGW\\include"
+                "C:\\MinGW\\include"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
