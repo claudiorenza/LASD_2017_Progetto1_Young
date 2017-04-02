@@ -18,7 +18,10 @@ int main()  {
 				break;
 			case 2:
 				printf("INSERIMENTO NUOVO ELEMENTO NELLA TABLEAU DI YOUNG\n\n");
-                tableau_insertKey(T_young);
+                if(!tableau_isFull(T_young))    
+					tableau_insertKey(T_young, 0);	//con il parametro '0' specifico che inserisco manualmente il valore
+				else 
+        			printf("ATTENZIONE: la Tableu è piena\n\n");
 				break;
 			case 3:
 				printf("STAMPA TABLEAU DI YOUNG\n\n");

@@ -95,13 +95,13 @@ void tableau_generate(TABLEAU T_young)   {
 //Inserimento nuovo elemento a tempo costante nell'ultima posizione della Tableau con riordino in swap
 void tableau_insertKey(TABLEAU T_young, int random)  {
     *(T_young[0][0]) += 1;   //incremento l'heapSize/numero degli elementi
-    tableau_insertKey_setLast(T_young);
+    tableau_insertKey_setLast(T_young); //aggiorno gli indici di posizionamento dell'ultimo elemento per l'inserimento a tempo costante
     if((T_young[*(T_young[2][0])][*(T_young[0][2])] = (int *)malloc(sizeof(int)))) {		//controllo di corretta allocazione dinamica di memoria
         if(!random)  {  //random == 0, quindi inserisco il valore manualmente
             printf("Quale valore vuoi inserire nella Tableau? ");
-            T_young[*(T_young[2][0])][*(T_young[0][2])] = io_getInteger();   //posiziono la chiave nell'ultima posizione
+            T_young[*(T_young[2][0])][*(T_young[0][2])] = io_getInteger();   //posiziono il valore nell'ultima posizione
         } else {
-            T_young[*(T_young[2][0])][*(T_young[0][2])] = random;
+            T_young[*(T_young[2][0])][*(T_young[0][2])] = random;   //pongo un valore casuale
         }
         printf("DEBUG: Last matrix[%d][%d] = %d\n", *(T_young[2][0]), *(T_young[0][2]), T_young[*(T_young[2][0])][*(T_young[0][2])]);
         tableau_minHeap_orderPadre(T_young, *(T_young[2][0]), *(T_young[0][2])); //riordino la tableu dall'ultima posizione
@@ -111,24 +111,25 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
     }
 }
 
-//Aggiorna i valori dell'indice di riga e di colonna per l'inserimento di un nuovo elemento nella Tableau
+//Aggiorna i valori dell'indice di riga e di colonna utile all'inserimento di un nuovo elemento nella Tableau
 void tableau_insertKey_setLast(TABLEAU T_young) {
-    if(isEmpty(T_young))    {   //primo elemento
-        *(T_young[2][0]) = 1;   //pongo l'indice di riga
-        *(T_young[0][2]) = 1;   //e di colonna per identificare il posto di inserimento del primoe elemento
+    if(tableau_isEmpty(T_young))    {   //primo elemento da inserire
+        *(T_young[2][0]) = 1;   //pongo l'indice di riga a 1
+        *(T_young[0][2]) = 1;   //e di colonna a 1 per identificare il posto di inserimento del primo elemento
     } else if(*(T_young[2][0]) > 1 && *(T_young[0][2]) < *(T_young[0][1])) {   //se l'ultimo elemento è posizionato all'interno della matrice
         *(T_young[2][0]) -= 1;  //aggiorno la posizione dell'ultimo elemento alla riga precedente
         *(T_young[0][2]) += 1;  //e alla colonna successiva
     } else   {  //se sto alla prima riga o all'ultima colonna
         if(*(T_young[2][0]) + *(T_young[0][2]) < *(T_young[1][0])) {    //se non ho raggiunto già l'ultima riga (sto sulla triangolare superiore)
-            *(T_young[2][0]) = *(T_young[2][0]) + *(T_young[0][2]);     //pongo all'ultima riga disponibile (1 + pos. attuale indice colonna)
-            *(T_young[0][2]) = 1;                                       //e alla prima colonna
+            *(T_young[2][0]) = *(T_young[2][0]) + *(T_young[0][2]);     //pongo l'indice di riga all'ultima disponibile (1 + pos. attuale indice colonna)
+            *(T_young[0][2]) = 1;                                       //e l'indice di colonna alla prima
         } else {    //se invece sto sulla triangolare inferiore
             int delta = *(T_young[2][0]) + *(T_young[0][2]) + 1;
-            *(T_young[2][0]) = *(T_young[1][0]);            //pongo all'ultima riga
-            *(T_young[0][2]) = delta - *(T_young[2][0]);    //e alla prima colonna disponibile
+            *(T_young[2][0]) = *(T_young[1][0]);            //pongo l'indice di riga all'ultima
+            *(T_young[0][2]) = delta - *(T_young[2][0]);    //e l'indice di colonna alla prima disponibile
         }
     }
+    printf("DEBUG: Last val in [%d][%d]n", *(T_young[2][0]), *(T_young[0][2]));
 }
 
 //Ricerca efficiente del valore nell'Heap (inOrder, senza la visita di valori più grandi di 'key')
