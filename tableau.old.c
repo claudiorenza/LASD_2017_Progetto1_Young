@@ -86,8 +86,42 @@ void tableau_generate(TABLEAU T_young)   {
 			printf("ATTENZIONE: Valore non valido\n\n");
 	}while(n_elem < 1 || n_elem > idx_row*idx_col);
 
-    for(int i=0;i<n_elem;i++)   
-        tableau_insertKey(T_young, random_num(1, 256));
+    //Riempimento diagonale della matrice triangolare superiore
+    for(idx_row=1;idx_row<=*(T_young[1][0]) && *(T_young[0][0]) <= n_elem;idx_row++)    { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo esterno
+        for(idx_col=1;idx_col<=*(T_young[0][1]) && idx_col<=idx_row && *(T_young[0][0])<=n_elem;idx_col++)   {  //se ho raggiunto l'indice di colonna massimo, o ho completato la diagonale 
+                                                                                                                //oppure ho raggiunto il numero di elementi richiesto, fermo il ciclo interno
+            if((T_young[idx_row-(idx_col-1)][idx_col] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+                *(T_young[idx_row-(idx_col-1)][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+                *(T_young[0][0]) += 1;   //incremento l'heapSize/numero di elementi
+                *(T_young[2][0]) = idx_row-(idx_col-1); //aggiorno l'indice di riga dell'ultimo elemento
+                *(T_young[0][2]) = idx_col;             //e l'indice di colonna dell'ultimo elemento
+                tableau_minHeap_orderPadre(T_young, idx_row-(idx_col-1), idx_col); //riordino la tableu da questa posizione
+            } else  {
+                printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
+                exit(1);
+            }
+        }
+    }
+
+    //Eventuale riempimento diagonale della matrice triangolare inferiore
+    if(idx_row > *(T_young[1][0]) && *(T_young[0][0]) < n_elem) {    //nel caso debba inserire ancora altri elementi
+        idx_row -= 1; //decremento per tornare al giusto indice di ultima riga [== *(T_young[1][0])]
+        for(idx_col=2;idx_col<=*(T_young[0][1]) && *(T_young[0][0]) <= n_elem;idx_col++)    { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo esterno
+            for(idx_row=*(T_young[1][0]); idx_row>=1 && (*(T_young[1][0])+idx_col)-idx_row<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_row--)   { //se ho raggiunto l'indice di riga minimo, o ho completato la diagonale 
+                                                                                                                                                        //oppure ho raggiunto il numero di elementi richiesto, fermo il ciclo interno
+                if((T_young[idx_row][(*(T_young[1][0])+idx_col)-idx_row] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+                    *(T_young[idx_row][(*(T_young[1][0])+idx_col)-idx_row]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+                    *(T_young[0][0]) += 1;   //incremento l'heapSize/numero di elementi
+                    *(T_young[2][0]) = idx_row;                             //aggiorno l'indice di riga dell'ultimo elemento
+                    *(T_young[0][2]) = (*(T_young[1][0])+idx_col)-idx_row;  //e l'indice di colonna dell'ultimo elemento
+                    tableau_minHeap_orderPadre(T_young, idx_row, (*(T_young[1][0])+idx_col)-idx_row); //riordino la tableu da questa posizione
+                } else  {
+                    printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
+                    exit(1);
+                }
+            }
+        }
+    }   
     tableau_print(T_young);    //stampa della Tableau generata
 }
 
@@ -111,19 +145,22 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
             *(T_young[0][2]) = delta - *(T_young[2][0]);                   //e alla prima colonna
         }
     }
-    if((T_young[*(T_young[2][0])][*(T_young[0][2])] = (int *)malloc(sizeof(int)))) {		//controllo di corretta allocazione dinamica di memoria
-        if(!random)  {  //random == 0, quindi inserisco il valore manualmente
+    if(!random)  {
+        if((T_young[*(T_young[2][0])][*(T_young[0][2])] = (int *)malloc(sizeof(int)))) {		//controllo di corretta allocazione dinamica di memoria
             printf("Quale valore vuoi inserire nella Tableau? ");
             T_young[*(T_young[2][0])][*(T_young[0][2])] = io_getInteger();   //posiziono la chiave nell'ultima posizione
-        } else {
-            T_young[*(T_young[2][0])][*(T_young[0][2])] = random;
+            
+            tableau_minHeap_orderPadre(T_young, *(T_young[2][0]), *(T_young[0][2])); //riordino la tableu dall'ultima posizione
+                    
+            tableau_print(T_young);    //stampa della Tableau aggiornata
+        } else  {
+            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
+            exit(1);
         }
-        printf("DEBUG: Last matrix[%d][%d] = %d\n", *(T_young[2][0]), *(T_young[0][2]), T_young[*(T_young[2][0])][*(T_young[0][2])]);
-        tableau_minHeap_orderPadre(T_young, *(T_young[2][0]), *(T_young[0][2])); //riordino la tableu dall'ultima posizione
-    } else  {
-        printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
-        exit(1);
+    } else {
+        
     }
+    printf("DEBUG: Last matrix[%d][%d] = %d\n", *(T_young[2][0]), *(T_young[0][2]), );
 }
 
 //Ricerca efficiente del valore nell'Heap (inOrder, senza la visita di valori più grandi di 'key')
