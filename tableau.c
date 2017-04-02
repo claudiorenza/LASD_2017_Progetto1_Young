@@ -53,7 +53,6 @@ TABLEAU tableau_init()  {
 //Riempimento matrice e creazione dell'Heap
 void tableau_generate(TABLEAU T_young)   {
     int idx_row, idx_col, n_elem, 
-    int idx_i, idx_col;   //indici di riga e colonna provvisori
     do  {
         printf("Quante righe vuoi nella Tableau? (1-%d): ", MAX_matrix);
         if((idx_row = io_getInteger()) < 1 || idx_row > MAX_matrix)
@@ -85,9 +84,9 @@ void tableau_generate(TABLEAU T_young)   {
         for(idx_col=1;idx_col<=idx_row && idx_col<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_col++)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
             //N.B.: 'idx_col<=*(T_young[0][1])' è utile nel caso in cui il numero di righe 'idx_row' possono essere maggiori delle colonne
             if((T_young[idx_row-(idx_col-1)][idx_col] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
-                *(T_young[idx_i][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+                *(T_young[idx_row-(idx_col-1)][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
                 *(T_young[0][0]) += 1;   //incremento l'heapSize/numero di elementi
-                idx_i--;    //l'indice di riga provvisoria diminuisce mentre l'indice di colonna aumenta
+                tableau_minHeap_orderPadre(T_young, idx_row-(idx_col-1), idx_col); //riordino la tableu da questa posizione
             } else  {
                 printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
                 exit(1);
@@ -97,15 +96,15 @@ void tableau_generate(TABLEAU T_young)   {
 
     //Eventuale riempimento triangolare inferiore
     if(idx_row > *(T_young[1][0]) && *(T_young[0][0]) < n_elem) {    //nel caso debba inserire ancora altri elementi
+        int delta;
         idx_row -= 1; //decremento per tornare al giusto indice di ultima riga [== *(T_young[1][0])]
         for(idx_col=2;idx_col<=*(T_young[0][1]) && *(T_young[0][0]) <= n_elem;idx_col++)    { //se ho raggiunto il numero di elementi richiesto, fermo il ciclo esterno
-            idx_col = idx_col;  //assegno all'indice di colonna da incrementare il valore di quello fissato in questo ciclo
-            for(idx_i=*(T_young[1][0]);idx_i>=1 && idx_col<=*(T_young[0][1]) && *(T_young[0][0])<=n_elem;idx_i--)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
-                //N.B.: 'idx_i<=*(T_young[1][0])' è utile nel caso in cui il numero di righe 'idx_row' possono essere maggiori delle colonne
-                if((T_young[idx_i][idx_col] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
-                    *(T_young[idx_i][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
+            delta = *(T_young[1][0])+idx_col;   //utile per il calcolo della colonna da assegnare nella matrice inferiore
+            for(idx_row=*(T_young[1][0]); idx_row>=2 && *(T_young[0][0])<=n_elem;idx_row--)   { //se ho raggiunto il numero di elementi richiesto o l'indice di colonna massimo, fermo il ciclo interno
+                if((T_young[idx_row][delta-idx_row] = (int *)malloc(sizeof(int)))){		//controllo di corretta allocazione dinamica di memoria
+                    *(T_young[idx_row][idx_col]) = num_random(1, 256);  //generazione numero casuale da 1 a 256
                     *(T_young[0][0]) += 1;   //incremento l'heapSize/numero di elementi
-                    idx_col++;    //l'indice di colonna provvisoria aumenta mentre l'indice di riga diminuisce
+                    tableau_minHeap_orderPadre(T_young, idx_row-(idx_col-1), idx_col); //riordino la tableu da questa posizione
                 } else  {
                     printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
                     exit(1);
@@ -150,10 +149,10 @@ int tableau_searchKey(TABLEAU T_young, int idx, int key)    {
 }
 
 //Sostituzione del valore con l'ultimo elemento dello Heap
-void tableau_overwrite(TABLEAU T_young, int idx)    {
-    T_young[idx_row][idx_col] = tableau_free_node(T_young[idx_row][idx_col]);   //libero il puntatore in posizione 'idx'
-    T_young[idx_row][idx_col] = T_young[*(T_young[0])];     //assegno alla posizione 'idx' il puntatore all'ultimo elemento Heap
-    *(T_young[0]) -= 1;   //diminuisco l'heapSize
+void tableau_overwrite(TABLEAU T_young, int idx_row, int idx_col)    {
+    T_young[idx_row][idx_col] = tableau_free_node(T_young[idx_row][idx_col]);   //libero il puntatore in posizione [idx_row][idx_col]
+    //T_young[idx_row][idx_col] = T_young[*(T_young[0])];     //CHECK: assegno alla posizione 'idx' il puntatore all'ultimo elemento Heap
+    *(T_young[0][0]) -= 1;   //diminuisco l'heapSize
 }
 
 //Eliminazione elemento 
@@ -165,12 +164,9 @@ void tableau_deleteKey(TABLEAU T_young) {
         int val_del = *(T_young[idx_row][idx_col]);     //salvo il valore cercato
         tableau_overwrite(T_young, idx);   //sovrascrivo il valore in posizione Tableau[idx_row][idx_col] con l'ultimo elemento dello Heap
         if(*(T_young[*(T_young[0])]) < val_del)   {  //confronto il valore eliminato con il sostituito, utile al riordino in Heap
-            while(idx_row > 1 && idx_col > 1 && *(T_young[tableau_minHeap_padre(idx)]) > *(T_young[idx_row][idx_col]))  {    //riordino a salire dalla posizione attuale
-                tableau_minHeap_swap(T_young, idx, tableau_minHeap_padre(idx));
-                idx = tableau_minHeap_padre(idx);
-            }
+            tableau_minHeap_orderPadre(T_young, idx_row, idx_col)
         } else    {
-            tableau_minHeap_heapify(T_young, idx); //riordino a scendere dalla posizione attuale
+            tableau_minHeap_heapify(T_young, idx_row, idx_col); //riordino a scendere dalla posizione attuale
         }
         tableau_print(T_young);    //stampa della Tableau aggiornata
         printf("Valore eliminato in Tableau[%d] = %d\n", idx_p, val_del);  //stampa dell'indice e del valore eliminato
@@ -236,9 +232,9 @@ void tableau_min(TABLEAU T_young)  {
 
 //Estrazione dell'elemento minimo
 int tableau_extractMin(TABLEAU T_young) {
-    int min = *(T_young[1]);
+    int min = *(T_young[1][1]);
     tableau_overwrite(T_young, 1); //scambio con l'ultimo elemento dell'Heap
-    tableau_minHeap_heapify(T_young, 1);   //riordino in Heap dalla radice
+    tableau_minHeap_heapify(T_young, 1, 1);   //riordino in Heap dalla radice
 
     return min;
 }
@@ -255,7 +251,13 @@ void tableau_print(TABLEAU T_young)   {
 
 
 int tableau_isEmpty(TABLEAU T_young) {
-    if(*(T_young[0]) == 0)   
+    if(*(T_young[0][0]) == 0)   
         return 1;
+    return 0;
+}
+
+int tableau_isFull(TABLEAU T_young) {
+    if((*(T_young[0][0]) == (*(T_young[1][0]) * *(T_young[0][1]))) &&  T_young[*(T_young[1][0])][*(T_young[0][1])])   
+        return 1;   //controlla se il numero di elementi corrisponde al numero massimo possibile da inserire e se è presente un valore nell'ultima posizione
     return 0;
 }

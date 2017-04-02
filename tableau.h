@@ -41,5 +41,7 @@ void tableau_print(TABLEAU T_young);
 
 int tableau_isEmpty(TABLEAU T_young);
 
+int tableau_isFull(TABLEAU T_young)
+
 
 #endif

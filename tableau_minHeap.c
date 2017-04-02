@@ -42,6 +42,14 @@ TABLEAUptr tableau_minHeap_destro(TABLEAU T_young, int idx_row, int idx_col)	{
 	return NULL;	//altrimenti ritorno un puntatore vuoto
 }
 
+//Riordino i valori a salire dalla posizione attuale
+void tableau_minHeap_orderPadre(TABLEAU T_young, int idx_row, int idx_col)	{
+	TABLEAUptr curr = T_young[idx_row][idx_col];
+	while(idx_row > 1 && idx_col > 1 && *(tableau_minHeap_padre(T_young, idx_row, idx_col)) > *(curr))  {    
+		tableau_minHeap_swap(curr, tableau_minHeap_padre(T_young, idx_row, idx_col));
+		curr = tableau_minHeap_padre(T_young, idx_row, idx_col);
+	}
+}
 
 //Indico fra i due padri chi ha il valore più grande (mi assicuro di mantenere una proprietà transitiva fra i valori da confrontare)
 TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
@@ -50,15 +58,6 @@ TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
 	else
 		return T_young[idx_row][idx_col-1];
 }
-
-
-/*Creazione dello Heap
-void tableau_minHeap_buildHeap(TABLEAU T_young)	{
-	int idx;
-	for(idx=*(T_young[0][0])/2; idx>0; idx--)
-		tableau_minHeap_heapify(T_young, idx);
-}
-*/
 
 //Swap dei valori nei riferimenti
 void tableau_minHeap_swap(TABLEAUptr T_ptr_el, TABLEAUptr T_ptr_min) {
