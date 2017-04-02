@@ -94,23 +94,8 @@ void tableau_generate(TABLEAU T_young)   {
 
 //Inserimento nuovo elemento a tempo costante nell'ultima posizione della Tableau con riordino in swap
 void tableau_insertKey(TABLEAU T_young, int random)  {
-    *(T_young[0][0]) += 1;   //incremento l'heapSize e assegno l'indice per la ricostruzione dell'heap
-    if(isEmpty(T_young))    {   //primo elemento
-        *(T_young[2][0]) = 1;  
-        *(T_young[0][2]) = 1;
-    } else if(*(T_young[2][0]) > 1 && *(T_young[0][2]) < *(T_young[0][1])) {   //aggiorno la posizione dell'ultimo elemento
-        *(T_young[2][0]) -= 1;  //alla riga precedente
-        *(T_young[0][2]) += 1;  //e alla colonna successiva
-    } else if(*(T_young[2][0]) == 1 && *(T_young[0][2]) < *(T_young[0][1]))  {  //se sto alla prima riga non raggiungendo l'ultima colonna
-        if(*(T_young[2][0]) + *(T_young[0][2]) < *(T_young[1][0])) { //se non ho raggiunto l'ultima riga (sto sulla triangolare superiore)
-            *(T_young[2][0]) = *(T_young[2][0]) + *(T_young[0][2]);    //imposto all'ultima riga disponibile
-            *(T_young[0][2]) = 1;                   //e alla prima colonna
-        } else {    //sto sulla triangolare inferiore
-            int delta = *(T_young[2][0]) + *(T_young[0][2]) + 1;
-            *(T_young[2][0]) = *(T_young[1][0]);    //imposto all'ultima riga
-            *(T_young[0][2]) = delta - *(T_young[2][0]);                   //e alla prima colonna
-        }
-    }
+    *(T_young[0][0]) += 1;   //incremento l'heapSize/numero degli elementi
+    tableau_insertKey_setLast(T_young);
     if((T_young[*(T_young[2][0])][*(T_young[0][2])] = (int *)malloc(sizeof(int)))) {		//controllo di corretta allocazione dinamica di memoria
         if(!random)  {  //random == 0, quindi inserisco il valore manualmente
             printf("Quale valore vuoi inserire nella Tableau? ");
@@ -123,6 +108,26 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
     } else  {
         printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
         exit(1);
+    }
+}
+
+//Aggiorna i valori dell'indice di riga e di colonna per l'inserimento di un nuovo elemento nella Tableau
+void tableau_insertKey_setLast(TABLEAU T_young) {
+    if(isEmpty(T_young))    {   //primo elemento
+        *(T_young[2][0]) = 1;   //pongo l'indice di riga
+        *(T_young[0][2]) = 1;   //e di colonna per identificare il posto di inserimento del primoe elemento
+    } else if(*(T_young[2][0]) > 1 && *(T_young[0][2]) < *(T_young[0][1])) {   //se l'ultimo elemento è posizionato all'interno della matrice
+        *(T_young[2][0]) -= 1;  //aggiorno la posizione dell'ultimo elemento alla riga precedente
+        *(T_young[0][2]) += 1;  //e alla colonna successiva
+    } else   {  //se sto alla prima riga o all'ultima colonna
+        if(*(T_young[2][0]) + *(T_young[0][2]) < *(T_young[1][0])) {    //se non ho raggiunto già l'ultima riga (sto sulla triangolare superiore)
+            *(T_young[2][0]) = *(T_young[2][0]) + *(T_young[0][2]);     //pongo all'ultima riga disponibile (1 + pos. attuale indice colonna)
+            *(T_young[0][2]) = 1;                                       //e alla prima colonna
+        } else {    //se invece sto sulla triangolare inferiore
+            int delta = *(T_young[2][0]) + *(T_young[0][2]) + 1;
+            *(T_young[2][0]) = *(T_young[1][0]);            //pongo all'ultima riga
+            *(T_young[0][2]) = delta - *(T_young[2][0]);    //e alla prima colonna disponibile
+        }
     }
 }
 

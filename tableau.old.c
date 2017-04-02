@@ -137,11 +137,11 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
         *(T_young[0][2]) += 1;  //e alla colonna successiva
     } else if(*(T_young[2][0]) == 1 && *(T_young[0][2]) < *(T_young[0][1]))  {  //se sto alla prima riga non raggiungendo l'ultima colonna
         if(*(T_young[2][0]) + *(T_young[0][2]) < *(T_young[1][0])) { //se non ho raggiunto l'ultima riga (sto sulla triangolare superiore)
-            *(T_young[2][0]) = *(T_young[2][0]) + *(T_young[0][2]);    //imposto all'ultima riga disponibile
+            *(T_young[2][0]) = *(T_young[2][0]) + *(T_young[0][2]);    //pongo all'ultima riga disponibile
             *(T_young[0][2]) = 1;                   //e alla prima colonna
         } else {    //sto sulla triangolare inferiore
             int delta = *(T_young[2][0]) + *(T_young[0][2]) + 1;
-            *(T_young[2][0]) = *(T_young[1][0]);    //imposto all'ultima riga
+            *(T_young[2][0]) = *(T_young[1][0]);    //pongo all'ultima riga
             *(T_young[0][2]) = delta - *(T_young[2][0]);                   //e alla prima colonna
         }
     }

@@ -21,6 +21,8 @@ void tableau_generate(TABLEAU T_young);
 
 void tableau_insertKey(TABLEAU T_young);
 
+void tableau_insertKey_setLast(TABLEAU T_young);
+
 int tableau_searchKey(TABLEAU T_young, int idx, int key);
 
 void tableau_overwrite(TABLEAU T_young, int idx);
