@@ -46,5 +46,6 @@ int main()  {
 	}while(choiceMenu != 7);
 
 	T_young = tableau_free(T_young, 1); //con il parametro '1', dealloco completamente la Tableau
+	io_clearScreen();
 	return 1;
 }

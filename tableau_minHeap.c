@@ -28,7 +28,7 @@ void tableau_minHeap_heapify(TABLEAU T_young, int idx_row, int idx_col)	{
 
 //Ricavo il puntatore del figlio sinistro (riga successiva)
 TABLEAUptr tableau_minHeap_sinistro(TABLEAU T_young, int idx_row, int idx_col)	{
-	if(idx_row+1 <= *(T_young[1][0]))	//se non eccedo col numero di righe
+	if(idx_row+1 <= *(T_young[1][0]) && T_young[idx_row+1][idx_col])	//se non eccedo col numero di righe
 		return T_young[idx_row+1][idx_col];	//ritorno il puntatore al figlio sinistro
 	return NULL;	//altrimenti ritorno un puntatore vuoto
 }
@@ -36,7 +36,7 @@ TABLEAUptr tableau_minHeap_sinistro(TABLEAU T_young, int idx_row, int idx_col)	{
 
 //Ricavo puntatore del il figlio destro (colonna successiva)
 TABLEAUptr tableau_minHeap_destro(TABLEAU T_young, int idx_row, int idx_col)	{
-	if(idx_col+1 <= *(T_young[0][1]))	//se non eccedo col numero di righe
+	if(idx_col+1 <= *(T_young[0][1]) && T_young[idx_row][idx_col+1])	//se non eccedo col numero di righe
 		return T_young[idx_row][idx_col+1];	//ritrono il puntatore al figlio destro
 	return NULL;	//altrimenti ritorno un puntatore vuoto
 }
@@ -46,15 +46,13 @@ void tableau_minHeap_orderPadre(TABLEAU T_young, int idx_row, int idx_col)	{
 	TABLEAUptr curr = T_young[idx_row][idx_col];
 	TABLEAUptr padre = NULL;
 	
-	while((idx_row > 1 || idx_col > 1) && (padre = tableau_minHeap_padre(T_young, idx_row, idx_col)))	{
-	    if(*(padre) > *(curr))  {
-			int tmp = *T_young[idx_row][idx_col];	//mi conservo momentaneamente il valore nella posizione attuale
-			tableau_minHeap_swap(curr, padre);
-			if(T_young[idx_row-1][idx_col] && tmp == *(T_young[idx_row-1][idx_col]))	//se il valore conservato è stato posizionato sopra
-				curr = T_young[--idx_row][idx_col];	//continuo il controllo dei padri nella riga precedente
-			else if(T_young[idx_row][idx_col-1] && tmp == *(T_young[idx_row][idx_col-1]))	//se il valore conservato è stato posizionato sinistra
-				curr = T_young[idx_row][--idx_col];	//continuo il controllo dei padri nella colonna precedente	
-		}
+	while((idx_row > 1 || idx_col > 1) && (padre = tableau_minHeap_padre(T_young, idx_row, idx_col)) && *(padre) > *(curr))	{
+		int tmp = *T_young[idx_row][idx_col];	//mi conservo momentaneamente il valore nella posizione attuale
+		tableau_minHeap_swap(curr, padre);
+		if(idx_row-1 >= 1 && T_young[idx_row-1][idx_col] && tmp == *(T_young[idx_row-1][idx_col]))	//se il valore conservato è stato posizionato sopra
+			curr = T_young[--idx_row][idx_col];	//continuo il controllo dei padri nella riga precedente
+		else if(idx_col-1 >= 1 && T_young[idx_row][idx_col-1] && tmp == *(T_young[idx_row][idx_col-1]))	//se il valore conservato è stato posizionato sinistra
+			curr = T_young[idx_row][--idx_col];	//continuo il controllo dei padri nella colonna precedente	
 	}
 }
 

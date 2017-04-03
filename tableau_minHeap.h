@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "tableau.h"
 
 typedef int *** TABLEAU;
 typedef int * TABLEAUptr;
