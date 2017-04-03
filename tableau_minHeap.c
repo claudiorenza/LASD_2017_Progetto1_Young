@@ -12,7 +12,7 @@ void tableau_minHeap_heapify(TABLEAU T_young, int idx_row, int idx_col)	{
 	else
 		T_ptr_min = T_young[idx_row][idx_col];	//posizione attuale
 
-	if(T_ptr_right && *(T_young[idx_row][idx_col]) < *(T_ptr_min))	//confronto dei valori fra posizione attuale e figlio destro
+	if(T_ptr_right && *T_ptr_right < *(T_ptr_min))	//confronto dei valori fra posizione attuale e figlio destro
 		T_ptr_min = T_ptr_right;
 
 	if(T_ptr_min != T_young[idx_row][idx_col])	{	//se effettivamente ho un valore da scambiare
@@ -53,6 +53,8 @@ void tableau_minHeap_orderPadre(TABLEAU T_young, int idx_row, int idx_col)	{
 			curr = T_young[--idx_row][idx_col];	//continuo il controllo dei padri nella riga precedente
 		else if(idx_col-1 >= 1 && T_young[idx_row][idx_col-1] && tmp == *(T_young[idx_row][idx_col-1]))	//se il valore conservato è stato posizionato sinistra
 			curr = T_young[idx_row][--idx_col];	//continuo il controllo dei padri nella colonna precedente	
+		//printf("\tDEBUG: padre in ordine [%d][%d]\n", idx_row, idx_col);
+		//tableau_print(T_young);
 	}
 }
 
@@ -60,8 +62,9 @@ void tableau_minHeap_orderPadre(TABLEAU T_young, int idx_row, int idx_col)	{
 TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
 	if((idx_row > 1 && idx_col == 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) > *(T_young[idx_row][idx_col-1])))
 		return T_young[idx_row-1][idx_col];	//o anche se il padre è solo nella riga superiore
-	else if((idx_row == 1 && idx_col > 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) < *(T_young[idx_row][idx_col-1])))
+	else if((idx_row == 1 && idx_col > 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) <= *(T_young[idx_row][idx_col-1])))
 		return T_young[idx_row][idx_col-1]; //o anche se il padre è solo nella colonna precedente
+	//printf("\tDEBUG: NULL row: %d - col: %d\n", idx_row, idx_col);
 	return NULL;
 }
 

@@ -8,7 +8,7 @@
 #include "num.h"
 #include "tableau_minHeap.h"
 
-#define MAX_matrix 256
+#define MAX_matrix 24
 
 typedef int *** TABLEAU;
 typedef int * TABLEAUptr;
@@ -17,6 +17,8 @@ typedef int * TABLEAUptr;
 int tableau_menu();
 
 TABLEAU tableau_init();
+
+void tableau_setLimits(TABLEAU T_young);
 
 void tableau_generate(TABLEAU T_young);
 

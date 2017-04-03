@@ -14,12 +14,21 @@ int main()  {
 		switch(choiceMenu = tableau_menu(tableau_isEmpty(T_young)))	{	//chiamata del menu principale con scelta dell'albero con controllo di esistenza della Tableau
 			case 1:
 				printf("GENERAZIONE TABLEAU DI YOUNG IN HEAP\n\n");
-				tableau_generate(T_young);
+				if(!tableau_isEmpty(T_young))	{
+					printf("ATTENZIONE: Tableu già presente\n\n");
+					tableau_delete(T_young);
+				}
+				if(tableau_isEmpty(T_young))	//nel caso non decidessi di eliminare la tableu
+					tableau_generate(T_young);
 				break;
 			case 2:
 				printf("INSERIMENTO NUOVO ELEMENTO NELLA TABLEAU DI YOUNG\n\n");
-                if(!tableau_isFull(T_young))    
+				if(tableau_isEmpty(T_young))
+					tableau_setLimits(T_young);
+                if(!tableau_isFull(T_young))    {
 					tableau_insertKey(T_young, 0);	//con il parametro '0' specifico che inserisco manualmente il valore
+					tableau_print(T_young);    //stampa della Tableau generata
+				}
 				else 
         			printf("ATTENZIONE: la Tableu è piena\n\n");
 				break;
