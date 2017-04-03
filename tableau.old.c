@@ -65,16 +65,16 @@ void tableau_generate(TABLEAU T_young)   {
 			printf("ATTENZIONE: Valore non valido\n\n");
 	}while(idx_col < 1 || idx_col > MAX_matrix);
     
-    if((newTableau[1][0] = (int *)malloc(sizeof(int))) && (newTableau[0][1] = (int *)malloc(sizeof(int))))  {
-        *(newTableau[1][0]) = idx_row;    //Pongo l'indice massimo di riga
-        *(newTableau[0][1]) = idx_col;    //e l'indice massimo di colonna
+    if((T_young[1][0] = (int *)malloc(sizeof(int))) && (T_young[0][1] = (int *)malloc(sizeof(int))))  {
+        *(T_young[1][0]) = idx_row;    //Pongo l'indice massimo di riga
+        *(T_young[0][1]) = idx_col;    //e l'indice massimo di colonna
     } else  {
         printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU elements - tableau_init\n");
         exit(1);
     }
-    if((newTableau[2][0] = (int *)malloc(sizeof(int))) && (newTableau[0][2] = (int *)malloc(sizeof(int))))  {
-        *(newTableau[2][0]) = 0;    //Pongo l'indice di riga dell'ultimo elemento
-        *(newTableau[0][2]) = 0;    //e l'indice di colonna dell'ultimo elemento
+    if((T_young[2][0] = (int *)malloc(sizeof(int))) && (T_young[0][2] = (int *)malloc(sizeof(int))))  {
+        *(T_young[2][0]) = 0;    //Pongo l'indice di riga dell'ultimo elemento
+        *(T_young[0][2]) = 0;    //e l'indice di colonna dell'ultimo elemento
     } else  {
         printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU ultimo elemento - tableau_init\n");
         exit(1);
@@ -97,7 +97,7 @@ void tableau_generate(TABLEAU T_young)   {
                 *(T_young[0][2]) = idx_col;             //e l'indice di colonna dell'ultimo elemento
                 tableau_minHeap_orderPadre(T_young, idx_row-(idx_col-1), idx_col); //riordino la tableu da questa posizione
             } else  {
-                printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
+                printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUptr - tableau_generate\n");
                 exit(1);
             }
         }
@@ -116,7 +116,7 @@ void tableau_generate(TABLEAU T_young)   {
                     *(T_young[0][2]) = (*(T_young[1][0])+idx_col)-idx_row;  //e l'indice di colonna dell'ultimo elemento
                     tableau_minHeap_orderPadre(T_young, idx_row, (*(T_young[1][0])+idx_col)-idx_row); //riordino la tableu da questa posizione
                 } else  {
-                    printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
+                    printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUptr - tableau_generate\n");
                     exit(1);
                 }
             }
@@ -154,7 +154,7 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
                     
             tableau_print(T_young);    //stampa della Tableau aggiornata
         } else  {
-            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUval - tableau_generate\n");
+            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAUptr - tableau_generate\n");
             exit(1);
         }
     } else {
@@ -236,7 +236,7 @@ TABLEAU tableau_free(TABLEAU T_young, int del_complete)	{   //il parametro 'del_
 }
 
 //Deallocazione del singolo vertice della Tableau con restituzione di NULL
-TABLEAUval tableau_free_node(TABLEAUval T_young_el) {
+TABLEAUptr tableau_free_node(TABLEAUptr T_young_el) {
     free(T_young_el);
     return NULL;
 }

@@ -1,8 +1,7 @@
 #include "tableau_minHeap.h"
-//ciao
+
 //Heapify
 void tableau_minHeap_heapify(TABLEAU T_young, int idx_row, int idx_col)	{
-	int idx_l, idx_r
 	TABLEAUptr T_ptr_min;	//riferimento al puntatore col valore più piccolo
 	TABLEAUptr T_ptr_left = tableau_minHeap_sinistro(T_young, idx_row, idx_col);	//indice di riga sul valore a sinistra
 	TABLEAUptr T_ptr_right = tableau_minHeap_destro(T_young, idx_row, idx_col);	//indice di colonna sul valore a destra
@@ -13,7 +12,7 @@ void tableau_minHeap_heapify(TABLEAU T_young, int idx_row, int idx_col)	{
 	else
 		T_ptr_min = T_young[idx_row][idx_col];	//posizione attuale
 
-	if(T_ptr_right && *(T_young[idx_row][idx_right]) < *(T_ptr_min))	//confronto dei valori fra posizione attuale e figlio destro
+	if(T_ptr_right && *(T_young[idx_row][idx_col]) < *(T_ptr_min))	//confronto dei valori fra posizione attuale e figlio destro
 		T_ptr_min = T_ptr_right;
 
 	if(T_ptr_min != T_young[idx_row][idx_col])	{	//se effettivamente ho un valore da scambiare
@@ -62,9 +61,9 @@ void tableau_minHeap_orderPadre(TABLEAU T_young, int idx_row, int idx_col)	{
 //Indico fra i due padri chi ha il valore più grande (mi assicuro di mantenere una proprietà transitiva fra i valori da confrontare)
 TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
 	if((idx_row > 1 && idx_col == 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) > *(T_young[idx_row][idx_col-1])))
-		return T_young[idx_row-1][idx_col];
+		return T_young[idx_row-1][idx_col];	//o anche se il padre è solo nella riga superiore
 	else if((idx_row == 1 && idx_col > 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) < *(T_young[idx_row][idx_col-1])))
-		return T_young[idx_row][idx_col-1];
+		return T_young[idx_row][idx_col-1]; //o anche se il padre è solo nella colonna precedente
 	return NULL;
 }
 
