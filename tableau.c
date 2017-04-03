@@ -52,19 +52,40 @@ TABLEAU tableau_init()  {
 
 //Riempimento matrice e creazione dell'Heap
 void tableau_generate(TABLEAU T_young)   {
-    int idx_row, idx_col, n_elem;
+    int idx_row, idx_col, n_elem, choice;
     do  {
-        printf("Quante righe vuoi nella Tableau? (1-%d): ", MAX_matrix);
-        if((idx_row = io_getInteger()) < 1 || idx_row > MAX_matrix)
+        printf("Vuoi inserire manualmente le grandezze della Tableu o vuoi generarla automaticamente?\n\t1. Manuale\t 2. Automatica\n\tSCELTA: ");
+        if((choice = io_getInteger()) < 1 || choice > 2)
 			printf("ATTENZIONE: Valore non valido\n\n");
-	}while(idx_row < 1 || idx_row > MAX_matrix);
+	}while(choice < 1 || choice > 2);
     
+    if(choice == 1)  {  //in caso di inserimento manuale del numero di righe e colonne
+        do  {
+            printf("Quante righe vuoi nella Tableau? (1-%d): ", MAX_matrix);
+            if((idx_row = io_getInteger()) < 1 || idx_row > MAX_matrix)
+                printf("ATTENZIONE: Valore non valido\n\n");
+        }while(idx_row < 1 || idx_row > MAX_matrix);
+        
+        do  {
+            printf("Quante colonne vuoi nella Tableau? (1-%d): ", MAX_matrix);
+            if((idx_col = io_getInteger()) < 1 || idx_col > MAX_matrix)
+                printf("ATTENZIONE: Valore non valido\n\n");
+        }while(idx_col < 1 || idx_col > MAX_matrix);
+    }
+
     do  {
-        printf("Quante colonne vuoi nella Tableau? (1-%d): ", MAX_matrix);
-        if((idx_col = io_getInteger()) < 1 || idx_col > MAX_matrix)
+        printf("Quanti elementi vuoi inserire nella Tableau? ")
+        if(choice == 1)
+            printf("(1-%d): ", idx_row*idx_col);
+        if(choice == 2)
+            printf("(1-%d): ", MAX_matrix*MAX_matrix);
+        if((n_elem = io_getInteger()) < 1 || (choice == 1 && n_elem > idx_row*idx_col) || (choice == 2 && n_elem > MAX_matrix*MAX_matrix)) //si possono inserire in input idx_row*idx_col elementi
 			printf("ATTENZIONE: Valore non valido\n\n");
-	}while(idx_col < 1 || idx_col > MAX_matrix);
+	}while(n_elem < 1 || (choice == 1 && n_elem > idx_row*idx_col) || (choice == 2 && n_elem > MAX_matrix*MAX_matrix));
     
+    if(choice == 2) //in caso di generazione automatica del numero di righe e colonne in formato quadratico
+        idx_row = idx_col = (int)sqrt(n_elem) + 1;
+
     if((T_young[1][0] = (int *)malloc(sizeof(int))) && (T_young[0][1] = (int *)malloc(sizeof(int))))  {
         *(T_young[1][0]) = idx_row;    //Pongo l'indice massimo di riga
         *(T_young[0][1]) = idx_col;    //e l'indice massimo di colonna
@@ -79,12 +100,6 @@ void tableau_generate(TABLEAU T_young)   {
         printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU ultimo elemento - tableau_init\n");
         exit(1);
     }
-
-    do  {
-        printf("Quanti elementi vuoi inserire nella Tableau? (1-%d): ", idx_row*idx_col);
-        if((n_elem = io_getInteger()) < 1 || n_elem > idx_row*idx_col)  //si possono inserire in input idx_row*idx_col elementi
-			printf("ATTENZIONE: Valore non valido\n\n");
-	}while(n_elem < 1 || n_elem > idx_row*idx_col);
 
     for(int i=0;i<n_elem;i++)   
         tableau_insertKey(T_young, random_num(1, 256));

@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 #include "io.h"
 #include "num.h"
 #include "tableau_minHeap.h"
