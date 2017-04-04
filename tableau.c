@@ -204,15 +204,26 @@ void tableau_overwrite_setLast(TABLEAU T_young) {
         *(T_young[2][0]) += 1;  //aggiorno la posizione dell'ultimo elemento alla riga successiva
         *(T_young[0][2]) -= 1;  //e alla colonna precedente
     } else   {  //se sto alla ultima riga o alla prima colonna
-        if(*(T_young[2][0]) + *(T_young[0][2]) <= *(T_young[0][1])+1) {    //se mi trovo sulla triangolare superiore
+        if((*(T_young[1][0]) >= *(T_young[0][1]) && *(T_young[2][0]) + *(T_young[0][2]) <= *(T_young[0][1])+1) || (*(T_young[1][0]) < *(T_young[0][1]) && *(T_young[2][0]) + *(T_young[0][2]) <= *(T_young[1][0])+1)) {    //se mi trovo sulla triangolare superiore
             printf("DEBUG: triangolare superiore\n");
             *(T_young[0][2]) = *(T_young[2][0]) - 1;    //pongo l'indice di colonna all'ultimo disponibile
             *(T_young[2][0]) = 1;                       //e pongo l'indice di riga alla prima
-        } else {    //se invece sto sulla triangolare inferiore
+        } 
+        else {    //se invece sto sulla triangolare inferiore
             printf("DEBUG: triangolare inferiore\n");
-            int delta = *(T_young[2][0]) + *(T_young[0][2])-1;
-            *(T_young[0][2]) = *(T_young[0][1]);    //pongo l'indice di colonna alla all'ultimo disponibile
-            *(T_young[2][0]) = delta - *(T_young[1][0]);    //e l'indice di riga 
+            int delta = *(T_young[2][0]) + *(T_young[0][2]) + 1;
+            if(*(T_young[1][0]) >= *(T_young[0][1])) {
+                *(T_young[0][2]) = *(T_young[0][1]);    //pongo l'indice di colonna alla all'ultimo disponibile
+                *(T_young[2][0]) = delta - *(T_young[1][0]);    //e l'indice di riga 
+            } else  {
+                if(delta - 2 - *(T_young[0][1]) > 1)    {
+                    *(T_young[0][2]) = *(T_young[0][1]);
+                    *(T_young[2][0]) = delta - 2 - *(T_young[0][1]);
+                } else {
+                    *(T_young[0][2]) = delta - 3;    //pongo l'indice di colonna alla all'ultimo disponibile
+                    *(T_young[2][0]) = 1;    //e l'indice di riga 
+                }
+            }
         }
     }
     printf("DEBUG: overwrite_Last val in [%d][%d]\n", *(T_young[2][0]), *(T_young[0][2]));
@@ -248,7 +259,6 @@ void tableau_deleteKey(TABLEAU T_young) {
 //Eliminazione dello Heap
 void tableau_delete(TABLEAU T_young) {
     char choice;
-    int val;
     do  {
         printf("Sei sicuro di voler eliminare la Tableau? (S/N): ");
         choice = toupper(io_getChar());
@@ -257,9 +267,10 @@ void tableau_delete(TABLEAU T_young) {
     }while(choice != 'S' && choice != 'N');
 
     if(choice == 'S')   {
+        int val;
         //T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
-/*DEBUG*/while(!tableau_isEmpty(T_young))1
-/*DEBUG*/   val = tableau_extractMin(T_young);
+        while(!tableau_isEmpty(T_young))
+            val = tableau_extractMin(T_young);
         printf("Tableau eliminata\n\n");
     }
     
