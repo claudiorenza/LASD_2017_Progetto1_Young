@@ -56,7 +56,8 @@ TABLEAU tableau_init()  {
         } else  {
             printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU ultimo elemento - tableau_init\n");
             exit(1);
-        }
+        }            
+
     } else {//in caso di errori nell'allocazione
         printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU righe - tableau_init\n");
         exit(1);
@@ -107,9 +108,14 @@ void tableau_generate(TABLEAU T_young)   {
     if(choice == 2) //in caso di generazione automatica del numero di righe e colonne in formato quadratico
         if(sqrt(n_elem) != (*(T_young[1][0]) = *(T_young[0][1]) = (int)sqrt(n_elem)))   //se avviene un troncamento con il cast
             *(T_young[1][0]) = *(T_young[0][1]) += 1;           //aumento l'indice di riga e colonna
-
+    
+    if(!(T_young[0][3] = (int *)calloc(*(T_young[1][0]) * *(T_young[0][1]), sizeof(int))))  {  //array hash per il controllo dei valori preesistenti nella Tableu a tempo costante
+            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU hash - tableau_generate\n");
+            exit(1);
+        }
+    
     for(int i=0;i<n_elem;i++)   
-        tableau_insertKey(T_young, random_num(1, 256));
+        tableau_insertKey(T_young, random_num(1, 1024));
     tableau_print(T_young);    //stampa della Tableau generata
 }
 
@@ -120,10 +126,21 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
     *(T_young[0][0]) += 1;   //incremento l'heapSize/numero degli elementi
     if((T_young[*(T_young[2][0])][*(T_young[0][2])] = (int *)malloc(sizeof(int)))) {		//controllo di corretta allocazione dinamica di memoria
         if(!random)  {  //random == 0, quindi inserisco il valore manualmente
-            printf("Quale valore vuoi inserire nella Tableau? ");
-            *T_young[*(T_young[2][0])][*(T_young[0][2])] = io_getInteger();   //posiziono il valore nell'ultima posizione
-        } else
-            *T_young[*(T_young[2][0])][*(T_young[0][2])] = random;   //pongo un valore casuale
+            int val;
+            do  {
+                printf("Quale valore vuoi inserire nella Tableau? ");
+                if((val = io_getInteger()) < 1 || val > MAX_matrix*MAX_matrix)
+                    printf("ATTENZIONE: Valore non valido\n\n");
+                else if((T_young[0][3])[val])
+                    printf("ATTENZIONE: Valore già presente nella Tableu\n\n");
+            }while((val < 1 || val > MAX_matrix*MAX_matrix) || ((T_young[0][3])[val]));
+            (T_young[0][3])[val] = 1;
+            *T_young[*(T_young[2][0])][*(T_young[0][2])] = val;   //posiziono il valore nell'ultima posizione
+        } else  {
+            if(!(T_young[0][3])[random])
+                *T_young[*(T_young[2][0])][*(T_young[0][2])] = random;   //pongo un valore casuale
+            
+        }
         //printf("DEBUG: tableau[%d][%d] = %d\n", *(T_young[2][0]), *(T_young[0][2]), *T_young[*(T_young[2][0])][*(T_young[0][2])]);
         tableau_minHeap_orderPadre(T_young, *(T_young[2][0]), *(T_young[0][2])); //riordino la tableu dall'ultima posizione
     } else  {
@@ -158,30 +175,29 @@ void tableau_insertKey_setLast(TABLEAU T_young) {
 TABLEAUptr tableau_searchKey(TABLEAU T_young, int *p_idx_row, int *p_idx_col, int key)    {
     int idx_row = *p_idx_row, idx_col = *p_idx_col;     //salvo nell'attuale R.A. gli indici di riga e colonna
     if(T_young[idx_row][idx_col])   {   //se != NULL
-        //printf("DEBUG: Check local[%d][%d]\n", idx_row, idx_col);
         if(key >= *(T_young[idx_row][idx_col]))  {   //controllo se la chiave è più grande del valore visitato nella Tableau
             *p_idx_row = idx_row+1;  //aggiorno il valore nel puntatore dell'indice di riga con il valore locale
             *p_idx_col = idx_col;
-            //printf("\tDEBUG: sx[%d][%d]\n", *p_idx_row, *p_idx_col);
+            printf("\tDEBUG: sx[%d][%d]\n", *p_idx_row, *p_idx_col);
             TABLEAUptr ptr_ret = tableau_searchKey(T_young, p_idx_row, p_idx_col, key); //ricorsivamente scendo a sinistra
-            //printf("\t\tDEBUG: Local Visit[%d][%d]\n", idx_row, idx_col);
+            printf("\t\tDEBUG: Local Visit[%d][%d] = %d\n", idx_row, idx_col, *(T_young[idx_row][idx_col]));
             if(ptr_ret)  {  //se l'ho già trovato
-                //printf("DEBUG: risalgo il trovato in indice[%d][%d]\n", *p_idx_row, *p_idx_col);
+                printf("DEBUG: risalgo il trovato in indice[%d][%d]\n", *p_idx_row, *p_idx_col);
                 return ptr_ret;   //ritorno già il puntatore ai R.A. precedenti;
             }
             if(key == *(T_young[idx_row][idx_col]))    { //se ho trovato effettivamente il valore
-                //printf("DEBUG: TROVATO\n");
+                printf("DEBUG: TROVATO\n");
                 *p_idx_row = idx_row;
                 *p_idx_col = idx_col;
                 return T_young[idx_row][idx_col];     //ritorno già il suo puntatore
             }
             *p_idx_row = idx_row;
             *p_idx_col = idx_col+1;  //aggiorno il valore nel puntatore dell'indice di colonna con il valore locale
-            //printf("\tDEBUG: dx[%d][%d]\n", *p_idx_row, *p_idx_col);
+            printf("\tDEBUG: dx[%d][%d]\n", *p_idx_row, *p_idx_col);
             return tableau_searchKey(T_young, p_idx_row, p_idx_col, key);  //ricorsivamente scendo a destra
         }
-    } //else
-        //printf("DEBUG: foglia NULL\n");
+    } else
+        printf("DEBUG: foglia NULL\n");
     return NULL;   //o non trovo il valore, o eccede key, oppure trovo una foglia NULL
 }
 
@@ -237,6 +253,7 @@ void tableau_deleteKey(TABLEAU T_young) {
     printf("Quale valore vuoi eliminare dalla Tableau? ");
     if((elem = tableau_searchKey(T_young, &idx_row, &idx_col, io_getInteger())))   {  //se trovato, restituisce il puntatore contenente il valore e gli indici di posizione
         int val_del = *(elem);     //salvo il valore trovato
+        (T_young[0][3])[val_del] = 0;
         tableau_overwrite(T_young, idx_row, idx_col);   //sovrascrivo il valore in posizione Tableau[idx_row][idx_col] con l'ultimo elemento della Tableu
         if(!tableau_isEmpty(T_young)) {   //controllo se ci sono elementi
             if(T_young[idx_row][idx_col])   {   //se non ho cancellato proprio l'elemento nell'ultima posizione
