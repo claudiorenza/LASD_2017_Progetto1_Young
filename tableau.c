@@ -210,6 +210,7 @@ void tableau_overwrite(TABLEAU T_young, int idx_row, int idx_col)    {
             T_young[idx_row][idx_col] = T_young[*(T_young[2][0])][*(T_young[0][2])];     //assegno alla posizione appena cancellata il puntatore all'ultimo elemento Heap
             T_young[*(T_young[2][0])][*(T_young[0][2])] = NULL;     //tolgo il riferimento all'ultima posizione
         }
+        printf("DEBUG: [%d][%d] eliminato\n\n", *(T_young[2][0]), *(T_young[0][2]));
         tableau_overwrite_setLast(T_young); //aggiorno gli indici di posizionamento dell'ultimo elemento per l'inserimento a tempo costante
     }
 }
