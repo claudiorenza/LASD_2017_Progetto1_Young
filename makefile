@@ -1,5 +1,5 @@
 # the compiler to use
-CC      = gcc
+CC      = gcc -std=c99
 
 
 # compiler flags:
@@ -22,10 +22,6 @@ all: $(OBJ)
 	$(CC) $(CCFLAGS) $(SRC) -lm -o tableauHeap main.c
 	@echo "Build complete"
 
-c99: $(OBJ)
-	$(CC) -std=c99 $(CCFLAGS) $(SRC) -lm -o tableauHeap main.c
-	@echo "Build complete"
-	
 clean:
 	$(RM) *.dSYM *.o tableauHeap
 	@echo "Clean complete"
