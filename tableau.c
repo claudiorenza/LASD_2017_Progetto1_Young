@@ -10,7 +10,7 @@ int tableau_menu(int isEmpty)	{
         printf("3. Stampa Tableau\n");
         printf("4. Visualizza/Estrai elemento minimo\n");
         printf("5. Cancella elemento\n");
-        printf("6. Cancelil Tableau");
+        printf("6. Cancella il Tableau");
     }
     printf("\n");
     printf("7. Esci\n");
@@ -246,7 +246,7 @@ void tableau_deleteKey(TABLEAU T_young) {
             tableau_print(T_young);    //stampa del Tableau aggiornata
         } else  {   //se ho eliminato l'ultimo elemento'
             tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
-            printf("Tableau eliminata\n");
+            printf("Tableau eliminato\n\n");
         }
         printf("Valore eliminato in Tableau[%d][%d] = %d\n", idx_row, idx_col, val_del);  //stampa dell'indice e del valore eliminato
     } else
@@ -266,7 +266,7 @@ void tableau_delete(TABLEAU T_young) {
     if(choice == 'S')   {
         T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
         if(tableau_isEmpty(T_young))
-            printf("Tableau eliminata\n\n");
+            printf("Tableau eliminato\n\n");
     }
 }
 

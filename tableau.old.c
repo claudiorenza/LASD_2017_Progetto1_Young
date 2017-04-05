@@ -234,7 +234,7 @@ void tableau_delete(TABLEAU T_young) {
 
     if(choice == 'S')
         T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
-    printf("Tableau eliminata\n");
+    printf("Tableau eliminato\n");
 }
 
 
