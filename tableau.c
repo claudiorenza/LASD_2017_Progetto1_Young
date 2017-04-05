@@ -292,7 +292,8 @@ TABLEAU tableau_free(TABLEAU T_young, int del_complete)	{   //il parametro 'del_
         *(T_young[0][1]) = 0; //resetto l'indice di colonna massimo
         *(T_young[2][0]) = 0; //resetto l'indice di riga dell'ultimo elemento
         *(T_young[0][2]) = 0; //resetto l'indice di colonna dell'ultimo elemento
-        if(!(T_young[0][3] = (int *)realloc(MAX_matrix*MAX_matrix, sizeof(int))))  {  //rialloco l'hash
+        free(T_young[0][3]);
+        if(!(T_young[0][3] = (int *)calloc(MAX_matrix*MAX_matrix, sizeof(int))))  {  //array hash per il controllo dei valori preesistenti nella Tableu a tempo costante
             printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU hash - tableau_generate\n");
             exit(1);
         }
@@ -316,10 +317,10 @@ void tableau_min(TABLEAU T_young)  {
         if(choice != 'S' && choice != 'N')
             printf("ATTENZIONE: comando non riconosciuto\n\n");
     }while(choice != 'S' && choice != 'N');
-
+    printf("\n");
     if(choice == 'S')   {
-        tableau_print(T_young);
         printf("Valore estratto: %d - Dimensione Tableau: %d\n\n", tableau_extractMin(T_young), *(T_young[0][0]));  //estrazione/cancellazione della radice con visualizzazione del nuovo heapSize
+        tableau_print(T_young);
     }
 }
 
