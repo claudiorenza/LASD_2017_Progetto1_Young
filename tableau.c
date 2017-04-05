@@ -358,7 +358,7 @@ void tableau_print(TABLEAU T_young)   {
     printf("\n");
     for(idx_col=1;idx_col<=*(T_young[0][1]);idx_col++)  //stampo gli indici di colonna
         printf("\t%d", idx_col);
-    printf("\n\n");
+    printf("\n\n\n");
     for(idx_row=1;idx_row<=*(T_young[1][0]);idx_row++) {         //ciclo fino all'ultima riga 
         printf("%d", idx_row);
         for(idx_col=1;idx_col<=*(T_young[0][1]);idx_col++)      //e all'ultima colonna

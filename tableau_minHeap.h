@@ -1,5 +1,5 @@
-#ifndef TABLEAU_HEAP_H_INCLUDED
-#define TABLEAU_HEAP_H_INCLUDED
+#ifndef TABLEAU_MINHEAP_H_INCLUDED
+#define TABLEAU_MINHEAP_H_INCLUDED
 
 #include <stdio.h>
 #include <stdlib.h>

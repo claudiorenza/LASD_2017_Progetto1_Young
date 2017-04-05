@@ -1,5 +1,6 @@
 # the compiler to use
-CC      = gcc -std=c99
+CC      = gcc
+
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
@@ -19,6 +20,10 @@ default: all
 
 all: $(OBJ)
 	$(CC) $(CCFLAGS) $(SRC) -lm -o tableauHeap main.c
+	@echo "Build complete"
+
+c99: $(OBJ)
+	$(CC) -std=c99 $(CCFLAGS) $(SRC) -lm -o tableauHeap main.c
 	@echo "Build complete"
 	
 clean:
