@@ -112,11 +112,20 @@ void tableau_generate(TABLEAU T_young)   {
     if(!(T_young[0][3] = (int *)calloc(*(T_young[1][0]) * *(T_young[0][1]), sizeof(int))))  {  //array hash per il controllo dei valori preesistenti nella Tableu a tempo costante
             printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU hash - tableau_generate\n");
             exit(1);
-        }
+    }
     
     for(int i=0;i<n_elem;i++)   
-        tableau_insertKey(T_young, random_num(1, 1024));
+        tableau_insertKey(T_young, tableau_generate_rndCheck(T_young[0][3], 1, *(T_young[1][0]) * *(T_young[0][1])));
     tableau_print(T_young);    //stampa della Tableau generata
+}
+
+//Controllo elementi disponibili per il ritorno di valori casuali sempre diversi
+int tableau_generate_rndCheck(int *hash, int min, int max)   {
+    int val;
+    while(hash[(val = random_num(min, max))]) //cerca un valore casuale disponibile
+        ;       //il ciclo si ferma appena trova nell'hash una posizione 'val' vuota
+    hash[val] = 1;
+    return val;
 }
 
 
@@ -137,9 +146,7 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
             (T_young[0][3])[val] = 1;
             *T_young[*(T_young[2][0])][*(T_young[0][2])] = val;   //posiziono il valore nell'ultima posizione
         } else  {
-            if(!(T_young[0][3])[random])
-                *T_young[*(T_young[2][0])][*(T_young[0][2])] = random;   //pongo un valore casuale
-            
+            *T_young[*(T_young[2][0])][*(T_young[0][2])] = random;   //pongo un valore casuale
         }
         //printf("DEBUG: tableau[%d][%d] = %d\n", *(T_young[2][0]), *(T_young[0][2]), *T_young[*(T_young[2][0])][*(T_young[0][2])]);
         tableau_minHeap_orderPadre(T_young, *(T_young[2][0]), *(T_young[0][2])); //riordino la tableu dall'ultima posizione

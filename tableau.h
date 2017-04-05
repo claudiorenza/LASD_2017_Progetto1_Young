@@ -22,6 +22,8 @@ void tableau_setLimits(TABLEAU T_young);
 
 void tableau_generate(TABLEAU T_young);
 
+int tableau_generate_rndCheck(int *hash, int min, int max);
+
 void tableau_insertKey(TABLEAU T_young, int random);
 
 void tableau_insertKey_setLast(TABLEAU T_young);
