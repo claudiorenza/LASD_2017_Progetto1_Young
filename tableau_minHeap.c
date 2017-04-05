@@ -53,18 +53,15 @@ void tableau_minHeap_orderPadre(TABLEAU T_young, int idx_row, int idx_col)	{
 			curr = T_young[--idx_row][idx_col];	//continuo il controllo dei padri nella riga precedente
 		else if(idx_col-1 >= 1 && T_young[idx_row][idx_col-1] && tmp == *(T_young[idx_row][idx_col-1]))	//se il valore conservato è stato posizionato sinistra
 			curr = T_young[idx_row][--idx_col];	//continuo il controllo dei padri nella colonna precedente	
-		//printf("\tDEBUG: padre in ordine [%d][%d]\n", idx_row, idx_col);
-		//tableau_print(T_young);
 	}
 }
 
 //Indico fra i due padri chi ha il valore più grande (mi assicuro di mantenere una proprietà transitiva fra i valori da confrontare)
 TABLEAUptr tableau_minHeap_padre(TABLEAU T_young, int idx_row, int idx_col)	{
 	if((idx_row > 1 && idx_col == 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) > *(T_young[idx_row][idx_col-1])))
-		return T_young[idx_row-1][idx_col];	//o anche se il padre è solo nella riga superiore
+		return T_young[idx_row-1][idx_col];	//faccio subito questo return se esiste solo il padre nella riga superiore
 	else if((idx_row == 1 && idx_col > 1) || (idx_row > 1 && idx_col > 1 && *(T_young[idx_row-1][idx_col]) <= *(T_young[idx_row][idx_col-1])))
-		return T_young[idx_row][idx_col-1]; //o anche se il padre è solo nella colonna precedente
-	//printf("\tDEBUG: NULL row: %d - col: %d\n", idx_row, idx_col);
+		return T_young[idx_row][idx_col-1]; ///faccio subito questo return se esiste solo il padre nella colonna precedente
 	return NULL;
 }
 

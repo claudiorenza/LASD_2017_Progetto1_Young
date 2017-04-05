@@ -1,5 +1,5 @@
 # the compiler to use
-CC      = gcc -std=c99
+CC      = gcc
 
 
 # compiler flags:
