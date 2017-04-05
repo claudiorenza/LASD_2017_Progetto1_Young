@@ -131,7 +131,7 @@ int tableau_generate_rndCheck(int *hash, int min, int max)   {
 
 //Inserimento nuovo elemento a tempo costante nell'ultima posizione della Tableau con riordino in swap
 void tableau_insertKey(TABLEAU T_young, int random)  {
-    tableau_insertKey_setLast(T_young); //aggiorno gli indici di posizionamento dell'ultimo elemento per l'inserimento a tempo costante
+    tableau_insertKey_setLast(T_young); //aggiorno gli indici di posizionamento dell'ultimo elemento dell'albero pieno per l'inserimento a tempo costante
     *(T_young[0][0]) += 1;   //incremento l'heapSize/numero degli elementi
     if((T_young[*(T_young[2][0])][*(T_young[0][2])] = (int *)malloc(sizeof(int)))) {		//controllo di corretta allocazione dinamica di memoria
         if(!random)  {  //random == 0, quindi inserisco il valore manualmente
@@ -143,7 +143,7 @@ void tableau_insertKey(TABLEAU T_young, int random)  {
                 else if((T_young[0][3])[val])
                     printf("ATTENZIONE: Valore già presente nella Tableu\n\n");
             }while((val < 1 || val > MAX_matrix*MAX_matrix) || ((T_young[0][3])[val]));
-            (T_young[0][3])[val] = 1;
+            (T_young[0][3])[val] = 1;       //pongo a 1 il valore nell'indice 'val' dell'hash per il controllo dei numeri già presenti
             *T_young[*(T_young[2][0])][*(T_young[0][2])] = val;   //posiziono il valore nell'ultima posizione
         } else  {
             *T_young[*(T_young[2][0])][*(T_young[0][2])] = random;   //pongo un valore casuale
@@ -235,16 +235,20 @@ void tableau_overwrite_setLast(TABLEAU T_young) {
         } 
         else {    //se invece sto sulla triangolare inferiore
             printf("DEBUG: triangolare inferiore\n");
-            int delta = *(T_young[2][0]) + *(T_young[0][2]) + 1;
-            if(*(T_young[1][0]) >= *(T_young[0][1])) {
+            int delta = *(T_young[2][0]) + *(T_young[0][2]);
+            if(*(T_young[1][0]) >= *(T_young[0][1])) {  //quadrato o rettangolo verticale
+                printf("DEBUG: quadrato o rettangolo verticale\n");
                 *(T_young[0][2]) = *(T_young[0][1]);    //pongo l'indice di colonna alla all'ultimo disponibile
-                *(T_young[2][0]) = delta - *(T_young[1][0]);    //e l'indice di riga 
-            } else  {
-                if(delta - 2 - *(T_young[0][1]) > 1)    {
+                *(T_young[2][0]) = delta - 1 - *(T_young[0][1]);    //e l'indice di riga 
+            } else  {       //rettangolo orizzontale
+                printf("DEBUG: rettangolo orizzontale ");
+                if(delta > *(T_young[0][1]) + 1)    {
+                    printf("- ultima riga\n");
                     *(T_young[0][2]) = *(T_young[0][1]);
-                    *(T_young[2][0]) = delta - 2 - *(T_young[0][1]);
+                    *(T_young[2][0]) = delta - 1 - *(T_young[0][1]);
                 } else {
-                    *(T_young[0][2]) = delta - 3;    //pongo l'indice di colonna alla all'ultimo disponibile
+                    printf("- in mezzo\n");
+                    *(T_young[0][2]) = delta - 2;    //pongo l'indice di colonna alla all'ultimo disponibile
                     *(T_young[2][0]) = 1;    //e l'indice di riga 
                 }
             }
