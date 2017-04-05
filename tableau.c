@@ -186,6 +186,7 @@ TABLEAUptr tableau_searchKey(TABLEAU T_young, int *p_idx_row, int *p_idx_col, in
             }
         }
     }
+    return NULL;
 }
 
 //Sostituzione del valore con l'ultimo elemento dello Heap
