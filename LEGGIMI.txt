@@ -1,5 +1,0 @@
-1. Inserimento dalla radice, quindi Heapify dal primo elemento
-
-2. Controllo numero massimo con verifica di creazione/allocazione ultimi elementi nella matrice
-
-3. Inserire nella documentazione il comportamento numerico degli indici durante la generazione della matrice
