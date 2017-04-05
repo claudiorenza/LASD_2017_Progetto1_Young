@@ -225,7 +225,7 @@ void tableau_overwrite_setLast(TABLEAU T_young) {
     }
 }
 
-//Eliminazione elemento 
+//Eliminazione elemento con riordino dalla posizione
 void tableau_deleteKey(TABLEAU T_young) {
     int idx_row=1, idx_col=1;
     TABLEAUptr elem;
@@ -264,13 +264,10 @@ void tableau_delete(TABLEAU T_young) {
     }while(choice != 'S' && choice != 'N');
 
     if(choice == 'S')   {
-        int val;
-        //T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
-        while(!tableau_isEmpty(T_young))
-            val = tableau_extractMin(T_young);
-        printf("Tableau eliminata\n\n");
+        T_young = tableau_free(T_young, 0);   //con '0' in parametro non elimino completamente l'matrice ma solo tutti i puntatori al suo interno
+        if(tableau_isEmpty(T_young))
+            printf("Tableau eliminata\n\n");
     }
-    
 }
 
 
@@ -286,6 +283,7 @@ TABLEAU tableau_free(TABLEAU T_young, int del_complete)	{   //il parametro 'del_
         free(T_young[0][1]);  //dealloco l'indice di colonna massimo
         free(T_young[2][0]);  //dealloco l'indice di riga dell'ultimo elemento
         free(T_young[0][2]);  //dealloco l'indice di colonna dell'ultimo elemento
+        free(T_young[0][3]);  //dealloco l'hash
 	    free(T_young);     //dealloco la Tableau
         return NULL;
     } else  //se l'utente decide di eliminare la Tableau
@@ -294,6 +292,10 @@ TABLEAU tableau_free(TABLEAU T_young, int del_complete)	{   //il parametro 'del_
         *(T_young[0][1]) = 0; //resetto l'indice di colonna massimo
         *(T_young[2][0]) = 0; //resetto l'indice di riga dell'ultimo elemento
         *(T_young[0][2]) = 0; //resetto l'indice di colonna dell'ultimo elemento
+        if(!(T_young[0][3] = (int *)realloc(MAX_matrix*MAX_matrix, sizeof(int))))  {  //rialloco l'hash
+            printf("[MEM] ATTENZIONE: Problema di allocazione TABLEAU hash - tableau_generate\n");
+            exit(1);
+        }
 	return T_young;
 }
 
@@ -316,8 +318,8 @@ void tableau_min(TABLEAU T_young)  {
     }while(choice != 'S' && choice != 'N');
 
     if(choice == 'S')   {
-        printf("Valore estratto: %d - Dimensione Heap: %d\n\n", tableau_extractMin(T_young), *(T_young[0][0]));  //estrazione/cancellazione della radice con visualizzazione del nuovo heapSize
         tableau_print(T_young);
+        printf("Valore estratto: %d - Dimensione Tableau: %d\n\n", tableau_extractMin(T_young), *(T_young[0][0]));  //estrazione/cancellazione della radice con visualizzazione del nuovo heapSize
     }
 }
 
