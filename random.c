@@ -4,4 +4,3 @@
 int random_num(int a, int b) {
 	return a+(rand() % (b-a+1));
 }
-

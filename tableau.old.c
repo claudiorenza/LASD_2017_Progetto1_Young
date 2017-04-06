@@ -3,10 +3,10 @@
 //Interfaccia utente
 int tableau_menu(int isEmpty)	{
 	int choiceMenu;
-	printf("\t\t\tTableau - MENÙ PRINCIPALE\n");
+	printf("\t\t\tTableau - menu PRINCIPALE\n");
 	printf("1. Genera Tableau\n");
 	printf("2. Inserisci nuovo elemento\n");
-    if(!isEmpty)    {   //se il Tableau esiste, mostro gli altri elementi del menù
+    if(!isEmpty)    {   //se il Tableau esiste, mostro gli altri elementi del menu
         printf("3. Stampa Tableau\n");
         printf("4. Visualizza/Estrai elemento minimo\n");
         printf("5. Cancella elemento\n");

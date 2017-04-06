@@ -1,11 +1,11 @@
 # the compiler to use
 CC      = gcc
 
-
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 CCFLAGS = -g -Wall
+
 RM      = rm -rf
 
 SRC = num.c \
@@ -14,7 +14,7 @@ SRC = num.c \
 	tableau_minHeap.c \
 	tableau.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:.c=.o) 
 
 default: all
 

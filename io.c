@@ -35,6 +35,6 @@ void io_clearScreen()	{
 //Pressione del tasto per continuare
 void io_pressKey()	{
 	printf("\n");
-	printf("Premere un tasto per continuare...");
+	printf("Premere Invio per continuare...");
 	getchar();
 }
