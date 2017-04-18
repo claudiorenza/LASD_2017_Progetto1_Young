@@ -5,6 +5,7 @@ CC      = gcc
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 CCFLAGS = -g -Wall
+CC99	= -std=c99
 
 RM      = rm -rf
 
@@ -20,6 +21,10 @@ default: all
 
 all: $(OBJ)
 	$(CC) $(CCFLAGS) $(SRC) -lm -o tableauHeap main.c
+	@echo "Build complete"
+
+linux: $(OBJ)
+	$(CC) $(CC99) $(CCFLAGS) $(SRC) -lm -o tableauHeap main.c
 	@echo "Build complete"
 
 clean:
